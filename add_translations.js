@@ -32,14 +32,14 @@ const enCollab = {
 
 const enBoard = {
     "sukhdevName": "Dr. Sukhdev Singh",
-    "sukhdevEdu": "PHD (IIT Patna)",
+    "sukhdevEdu": "Ph.D. (IIT Patna)",
     "sukhdevRole": "Co-Founder & Director (Research & Strategy)",
     "sukhdevBio": "A passionate researcher and strategic visionary with deep expertise in transforming complex ideas into scalable technological solutions.",
     "sukhdevAch1": "Ph.D. in Computer Science & Engineering from IIT Patna.",
     "sukhdevAch2": "Pioneered research in AI, IoT & Smart Systems.",
     "sukhdevAch3": "Published numerous patents & high-impact research papers.",
     "sangitaName": "Dr. Sangita Roy",
-    "sangitaEdu": "PHD (IIT Patna)",
+    "sangitaEdu": "Ph.D. (IIT Patna)",
     "sangitaRole": "Co-Founder & Director (Innovation & Technology)",
     "sangitaBio": "An innovative technologist and academician dedicated to developing sustainable, research-led prototypes with real-world industry applications.",
     "sangitaAch1": "Ph.D. in Computer Science & Engineering from IIT Patna.",

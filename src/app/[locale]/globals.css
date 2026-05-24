@@ -5,11 +5,11 @@
 @theme inline {
   --color-teal-400: #3A9B9B;
   --color-teal-500: #2a7676;
-  --font-sans: 'Inter', sans-serif;
+  --font-sans: var(--font-inter), var(--font-devanagari), var(--font-bengali), var(--font-gurmukhi), sans-serif;
 }
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-sans);
   overflow-x: hidden;
   scroll-behavior: smooth;
   transition: background-color 0.3s ease, color 0.3s ease;

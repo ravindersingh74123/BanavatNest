@@ -40,6 +40,7 @@ const InfiniteUpdateBar: React.FC<InfiniteUpdateBarProps> = ({ updates }) => {
                         <Link
                             key={idx}
                             href={update.route}
+                            target="_blank"
                             className="mx-8 text-sm font-medium text-zinc-700 dark:text-zinc-300 flex items-center hover:text-[#3A9B9B] dark:hover:text-[#3A9B9B] transition-colors"
                         >
                             <span className="w-1.5 h-1.5 rounded-full bg-[#3A9B9B] mr-3 inline-block animate-pulse"></span>

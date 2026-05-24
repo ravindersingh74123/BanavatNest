@@ -168,7 +168,7 @@ export default function NewsEvents() {
   return (
     <section
       id="news-events"
-      className="py-16 bg-white dark:bg-zinc-900 overflow-hidden grid-bg"
+      className="pt-16 bg-white dark:bg-zinc-900 overflow-hidden grid-bg"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
@@ -187,7 +187,9 @@ export default function NewsEvents() {
             </p> */}
             <h2 className="text-4xl md:text-5xl font-black text-zinc-900 dark:text-zinc-50 tracking-[-0.03em] leading-[1]">
               {t("sectionTitle")}{" "}
-              <span className="text-[#3A9B9B]">{t("sectionHighlight")}</span>
+              <span className="text-[#3A9B9B]">
+                {t("sectionHighlight")}
+              </span>
             </h2>
           </div>
 
@@ -222,7 +224,7 @@ export default function NewsEvents() {
               {/* Two-column layout */}
               <div className="grid grid-cols-1 md:grid-cols-2 min-h-[400px] md:min-h-[440px]">
                 {/* LEFT — Post Text */}
-                <div className="relative flex flex-col justify-between p-8 md:p-10 border-b md:border-b-0 md:border-r border-zinc-100 dark:border-zinc-800 bg-gradient-to-br from-[#3A9B9B]/5 via-white/60 to-[#2D3561]/5 backdrop-blur-sm">
+                <div className="relative flex flex-col justify-between p-8 md:p-10 border-b md:border-b-0 md:border-r border-zinc-100 dark:border-zinc-800 bg-gradient-to-br from-[#3A9B9B]/5 via-white/60 to-[#2D3561]/5 dark:from-[#3A9B9B]/10 dark:via-zinc-900/60 dark:to-[#2D3561]/10 backdrop-blur-sm">
                   <AnimatePresence custom={direction} mode="wait">
                     <motion.div
                       key={`text-${activeIndex}`}
@@ -237,7 +239,7 @@ export default function NewsEvents() {
                       {/* Tag + Date */}
                       <div className="flex items-center gap-3 mb-5">
                         <span
-                          className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-[0.2em] px-3 py-1.5 rounded-full"
+                          className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-[0.2em] px-3 rounded-full"
                           style={{
                             backgroundColor: `${item.tagColor}18`,
                             color: item.tagColor,
@@ -253,7 +255,7 @@ export default function NewsEvents() {
                       </div>
 
                       {/* Headline */}
-                      <h3 className="text-justify text-xl md:text-2xl font-black text-zinc-900 dark:text-zinc-50 tracking-tight leading-snug mb-4">
+                      <h3 className="text-justify text-xl md:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#2D3561] via-[#3A9B9B] to-[#2D3561] dark:from-white dark:via-[#3A9B9B] dark:to-white tracking-tight leading-snug mb-4">
                         {item.headline}
                       </h3>
 

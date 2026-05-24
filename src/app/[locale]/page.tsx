@@ -10,6 +10,7 @@ import NewsEvents from "@/components/homepage/NewsEvents";
 import TestimonialsSection from "@/components/homepage/TestimonialsSection";
 import InfiniteUpdateBar from "@/components/InfiniteUpdateBar";
 import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 
 const FadeInSection = ({ children }: { children: React.ReactNode }) => (
   <motion.div
@@ -45,6 +46,7 @@ const Home = () => {
         </div>
       </FadeInSection>
 
+
       <FadeInSection>
         <WhatWeDo />
       </FadeInSection>
@@ -75,14 +77,14 @@ const Home = () => {
           className=" flex flex-col sm:flex-row items-center justify-center gap-4 text-center"
         >
           <p className="text-sm text-zinc-500 dark:text-zinc-400 font-medium">
-            Ready to start your collaboration journey?
+            {t('readyToStart')}
           </p>
-          <a
+          <Link
             href="/contact"
             className="text-sm font-black text-[#3A9B9B] hover:underline underline-offset-4 transition-all"
           >
-            Contact us →
-          </a>
+            {t('contactUs')}
+          </Link>
         </motion.div>
       </FadeInSection>
     </>

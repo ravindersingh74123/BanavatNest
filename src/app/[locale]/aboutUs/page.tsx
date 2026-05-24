@@ -49,7 +49,7 @@ const AboutUs = () => {
             </motion.div>*/}
 
       {/* Our Name Section */}
-      <section className="p-12 max-w-7xl mx-auto">
+      <section className="px-6 py-10 md:p-12 max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -70,7 +70,7 @@ const AboutUs = () => {
               viewport={{ once: true }}
               whileHover={{ y: -5 }}
               transition={{ duration: 0.5 }}
-              className="relative p-12 rounded-[2.5rem] overflow-hidden 
+              className="relative p-8 md:p-12 rounded-[2.5rem] overflow-hidden 
                                 border-2 border-[#3A9B9B]/20 
                                 bg-gradient-to-br from-[#3A9B9B]/5 via-white/60 to-[#2D3561]/5 
                                 dark:from-[#3A9B9B]/10 dark:via-zinc-900/60 dark:to-[#2D3561]/10 
@@ -90,7 +90,7 @@ const AboutUs = () => {
               viewport={{ once: true }}
               whileHover={{ y: -5 }}
               transition={{ duration: 0.5 }}
-              className="relative p-12 rounded-[2.5rem] overflow-hidden 
+              className="relative p-8 md:p-12 rounded-[2.5rem] overflow-hidden 
                                 border-2 border-[#3A9B9B]/20 
                                 bg-gradient-to-br from-[#3A9B9B]/5 via-white/60 to-[#2D3561]/5 
                                 dark:from-[#3A9B9B]/10 dark:via-zinc-900/60 dark:to-[#2D3561]/10 
@@ -112,7 +112,7 @@ const AboutUs = () => {
       </section>
 
       {/* Symbolism of BanavatNest Section */}
-      <section className="p-12 max-w-7xl mx-auto">
+      <section className="px-6 py-10 md:p-12 max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -145,7 +145,7 @@ const AboutUs = () => {
           {/* Two-column layout */}
           <div className="grid md:grid-cols-2 gap-0 items-start pt-5">
             {/* LEFT: Heading + Content */}
-            <div className="px-8 md:px-14 !pt-[30px] py-16 md:py-24">
+            <div className="px-6 md:px-10 !pt-[30px] py-10 md:py-16">
               {/* Headline */}
               <motion.h2
                 initial={{ opacity: 0, y: 12 }}
@@ -197,13 +197,13 @@ const AboutUs = () => {
         </motion.div>
       </section>
 
-      <section className="p-12 relative max-w-7xl mx-auto">
+      <section className="px-6 py-10 md:p-12 relative max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-3xl md:text-5xl lg:text-6xl dark:text-white font-bold mb-6"
+            className="text-3xl md:text-5xl lg:text-6xl dark:text-white font-bold mb-4"
           >
             {t("coreValuesTitle")}{" "}
             <span className="text-[#3A9B9B]">{t("coreValuesHighlight")}</span>
@@ -224,14 +224,14 @@ const AboutUs = () => {
           {/* Decorative accent line */}
           <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#2D3561] via-[#3A9B9B] to-[#2D3561] rounded-t-3xl" />
 
-          <div className="grid md:grid-cols-2 gap-0 items-start">
+          <div className="grid md:grid-cols-2 gap-0 items-start pt-5">
             {/* LEFT: Image */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95, x: -20 }}
               whileInView={{ opacity: 1, scale: 1.1, x: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.3, duration: 0.7 }}
-              className="relative aspect-square md:aspect-auto md:h-full min-h-[300px] md:min-h-[500px]"
+              className="relative aspect-square"
             >
               <Image
                 src="/images/Core Values.png"
@@ -242,7 +242,7 @@ const AboutUs = () => {
             </motion.div>
 
             {/* RIGHT: Text + Grid */}
-            <div className="px-8 md:px-14 py-12 md:py-20">
+            <div className="px-6 md:px-10 !pt-[30px] py-10 md:py-16">
               {/* Philosophy text */}
               <motion.p
                 initial={{ opacity: 0, y: 10 }}
@@ -336,10 +336,13 @@ const AboutUs = () => {
               </div>
             </div>
           </div>
+
+          {/* Decorative bottom glow */}
+          <div className="absolute bottom-0 right-1/4 translate-x-1/2 w-48 h-24 bg-[#3A9B9B]/15 blur-3xl rounded-full pointer-events-none" />
         </motion.div>
       </section>
       {/* Our Mission & Our Vision Section */}
-      <section className="p-12 max-w-7xl mx-auto">
+      <section className="px-6 py-10 md:p-12 max-w-7xl mx-auto">
         {/* Section heading */}
         <div className="text-center mb-14">
           <motion.h2
@@ -362,7 +365,7 @@ const AboutUs = () => {
             viewport={{ once: true }}
             transition={{ delay: 0.1, duration: 0.6 }}
             whileHover={{ y: -5 }}
-            className="relative p-12 rounded-[2.5rem] overflow-hidden 
+            className="relative p-8 md:p-12 rounded-[2.5rem] overflow-hidden 
                                 border-2 border-[#3A9B9B]/20 
                                 bg-gradient-to-br from-[#3A9B9B]/5 via-white/60 to-[#2D3561]/5 
                                 dark:from-[#3A9B9B]/10 dark:via-zinc-900/60 dark:to-[#2D3561]/10 
@@ -382,7 +385,7 @@ const AboutUs = () => {
             viewport={{ once: true }}
             transition={{ delay: 0.2, duration: 0.6 }}
             whileHover={{ y: -5 }}
-            className="relative p-12 rounded-[2.5rem] overflow-hidden 
+            className="relative p-8 md:p-12 rounded-[2.5rem] overflow-hidden 
                                 border-2 border-[#3A9B9B]/20 
                                 bg-gradient-to-br from-[#3A9B9B]/5 via-white/60 to-[#2D3561]/5 
                                 dark:from-[#3A9B9B]/10 dark:via-zinc-900/60 dark:to-[#2D3561]/10 

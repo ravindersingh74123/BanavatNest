@@ -1,7 +1,7 @@
 'use client';
 
 import { Link } from '@/i18n/navigation';
-import { Mail, Phone, Linkedin, Facebook, Instagram } from 'lucide-react';
+import { Mail, Phone, Linkedin, Facebook, Instagram, MapPin } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import Logo from '../Logo';
@@ -20,16 +20,18 @@ const Footer = () => {
     return (
         <footer className="bg-white pt-6 pb-6 border-t-2 border-[#3A9B9B]/30 relative overflow-hidden transition-colors no-print print:hidden">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                     <div className="col-span-1 md:col-span-1">
-                        <Link href="/" className="inline-block transition-transform hover:scale-105 mb-6">
-                            <Logo />
+                        <Link href="/" className="inline-block transition-transform hover:scale-105 ">
+                            <Logo className="h-20 w-auto" />
                         </Link>
-                        <div className="text-gray-500 dark:text-gray-500 text-sm leading-relaxed font-medium space-y-2">
+                        <div className="text-gray-500 dark:text-gray-500 text-[12px] leading-relaxed font-bold space-y-1">
                             <p>{t('companyName')}</p>
                             <p>{t('cin')}</p>
+                            <p>GSTIN: 19AANCB7293G1Z4</p>
+                            <p>Udyam No: UDYAM-WB-12-0125063</p>
                         </div>
-                        <div className="mt-8 flex space-x-3">
+                        <div className="mt-4 flex space-x-3">
                             {socialLinks.map(({ Icon, href, label, color, hoverBg }, i) => (
                                 <motion.div key={i} whileHover={{ y: -5, scale: 1.1 }}>
                                     <a
@@ -72,12 +74,29 @@ const Footer = () => {
                                 href="https://mail.google.com/mail/?view=cm&fs=1&to=info@banavatnest.com&su=Inquiry from Website&body=Hi BanavatNest Team,"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="hover:underline"
+                                className="hover:underline text-[12px]"
                             >
                                 info@banavatnest.com
                             </a></li>
-                            <li className="flex items-start"><Phone className="w-5 h-5 mr-3 text-[#3A9B9B] shrink-0" /> +91 99340 44777<br />+91 80023 96506</li>
+                            <li className="flex items-start"><Phone className="w-5 h-5 mr-3 text-[#3A9B9B] shrink-0" /> <span className="text-[12px]"> +91 99340 44777 , +91 80023 96506</span></li>
                         </ul>
+
+                        <div className="mt-4 space-y-4 text-sm text-gray-500 dark:text-gray-500">
+                            <div className="flex items-start">
+                                <MapPin className="w-5 h-5 mr-3 mt-0.5 text-[#3A9B9B] shrink-0" />
+                                <div>
+                                    <span className="block text-zinc-900 text-[12px] font-bold mb-1">{t('registeredAddressLabel')}</span>
+                                    <span className="block text-[12px] font-bold">{t('registeredAddress')}</span>
+                                </div>
+                            </div>
+                            <div className="flex items-start">
+                                <MapPin className="w-5 h-5 mr-3 mt-0.5 text-[#3A9B9B] shrink-0" />
+                                <div>
+                                    <span className="block text-zinc-900 text-[12px] font-bold mb-1">{t('incubationSupportLabel')}</span>
+                                    <span className="block text-[12px] font-bold">{t('incubationSupport')}</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

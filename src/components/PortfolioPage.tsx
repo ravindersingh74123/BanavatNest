@@ -419,8 +419,8 @@ export default function PortfolioPage({ data }: PortfolioPageProps) {
                                                     <span className="flex h-2 w-2 rounded-full bg-[#3A9B9B] animate-pulse"></span>
                                                     <span className="text-[10px] font-black text-[#2a7676] dark:text-[#3A9B9B] uppercase tracking-[0.2em]">Board of Directors</span>
                                                 </div>
-                                                <h1 className="text-4xl md:text-5xl font-black text-zinc-900 dark:text-zinc-100 tracking-tighter leading-tight">{data.name}</h1>
-                                                <p className="text-xl font-bold text-[#3A9B9B] uppercase tracking-widest mt-2">{data.role}</p>
+                                                <h1 className="text-3xl md:text-4xl font-black text-zinc-900 dark:text-zinc-100 tracking-tighter leading-tight">{data.name}</h1>
+                                                <p className="text-xl font-bold text-[#3A9B9B] tracking-widest mt-2">{data.role}</p>
                                             </div>
                                         </div>
 
@@ -431,7 +431,7 @@ export default function PortfolioPage({ data }: PortfolioPageProps) {
                                             <div className="relative">
                                                 <div
                                                     className="text-lg text-justify text-zinc-600 dark:text-zinc-400 leading-relaxed font-medium space-y-5 whitespace-pre-line overflow-hidden transition-all duration-500"
-                                                    style={{ maxHeight: bioExpanded ? '9999px' : '55vh' }}
+                                                    style={{ maxHeight: bioExpanded ? '9999px' : '37vh' }}
                                                 >
                                                     {data.bio.split('\n\n').map((para, i) => (
                                                         <p key={i}>{para}</p>
@@ -463,7 +463,7 @@ export default function PortfolioPage({ data }: PortfolioPageProps) {
                                 <div>
                                     <div className="flex items-center gap-4 mb-6">
                                         <div className="w-12 h-12 rounded-2xl bg-[#3A9B9B]/10 flex items-center justify-center"><Briefcase className="w-6 h-6 text-[#3A9B9B]" /></div>
-                                        <h2 className="text-4xl font-black text-zinc-900 dark:text-zinc-100 tracking-tight">My Job</h2>
+                                        <h2 className="text-4xl font-black text-zinc-900 dark:text-zinc-100 tracking-tight">Job</h2>
                                     </div>
                                     <p className="text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed font-medium mb-10 text-justify">{data.job.summary}</p>
 

@@ -14,8 +14,8 @@ export default function PrivacyPolicyPage() {
                 transition={{ duration: 0.4 }}
             >
                 <h1 className="text-4xl font-extrabold text-[#2D3561] dark:text-zinc-100 mb-2">{t('title')}</h1>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-6">{t('effectiveDate')}</p>
-                
+                {/* <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-6">{t('effectiveDate')}</p> */}
+
                 <div className="prose dark:prose-invert max-w-none text-gray-700 dark:text-zinc-300">
                     <p>{t('intro')}</p>
 

@@ -4,7 +4,7 @@ import PortfolioPage, { PortfolioData } from '@/components/PortfolioPage';
 const SUKHDEV_DATA: PortfolioData = {
     id: 'dr-sukhdev-singh',
     name: 'Dr. Sukhdev Singh',
-    role: 'Director | PhD (IIT Patna)',
+    role: 'Ph.D. (IIT Patna)',
     image: '/images/Director/Sukhdev.jpeg',
 
     bio: `Sukhdev Singh was born to a Sikhism-follower family in a small village named Sirah, Tehsil Batala, District Gurdaspur in Punjab State of India on 20th Oct 1986. The economic condition of his father, Harinder Singh, and mother, Gursharanjit Kaur was not very good at that time, and they were worried about how they would provide a good education to their son, as there was no good school in the village. They also realized that the number of girls receiving education in the village is very low, which motivated them to start a school with their hard work and encouragement from the village people.

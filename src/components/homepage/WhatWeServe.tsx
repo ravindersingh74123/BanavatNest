@@ -400,7 +400,7 @@ export default function WhatWeServe() {
   return (
     <section
       id="what-we-serve"
-      className="py-12 bg-white dark:bg-zinc-900 overflow-hidden grid-bg"
+      className="pt-16 bg-white dark:bg-zinc-900 overflow-hidden grid-bg"
     >
       <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16">
         {/* ── Header ── */}

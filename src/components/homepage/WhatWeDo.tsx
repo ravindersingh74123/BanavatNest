@@ -209,12 +209,12 @@ export default function WhatWeDo() {
   };
 
   return (
-    <section className="py-12 bg-white dark:bg-zinc-900 overflow-hidden grid-bg">
+    <section className="pt-16 bg-white dark:bg-zinc-900 overflow-hidden grid-bg">
       <div className="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="relative grid grid-cols-1 lg:grid-cols-[0.7fr_0.3fr] gap-12 items-stretch">
           {/* Left Division: Our Domains */}
           <div className="flex flex-col h-full w-full relative z-10 lg:pr-8">
-            <h2 className="text-3xl !text-center md:text-5xl lg:text-5xl font-black text-zinc-900 dark:text-zinc-100 tracking-tighter mb-10 text-center lg:text-left">
+            <h2 className="text-3xl !text-center md:text-5xl lg:text-5xl font-black text-zinc-900 dark:text-zinc-100 tracking-tighter mb-6 text-center lg:text-left">
               {t("whatWeDo.coreDomainsTitle")}{" "}
               <span className="text-[#3A9B9B]">
                 {t("whatWeDo.coreDomainsHighlight")}
@@ -227,7 +227,7 @@ export default function WhatWeDo() {
 
           {/* Right Division: What We Do & How We Work */}
           <div className="flex flex-col w-full relative z-10 lg:pl-10 border-l border-zinc-200 dark:border-zinc-800/50">
-            <h2 className="text-3xl !text-center md:text-5xl lg:text-5xl font-black text-zinc-900 dark:text-zinc-100 tracking-tighter mb-10 text-center lg:text-left">
+            <h2 className="text-3xl !text-center md:text-5xl lg:text-5xl font-black text-zinc-900 dark:text-zinc-100 tracking-tighter mb-6 text-center lg:text-left">
               {t("whatWeDo.title")}{" "}
               <span className="text-[#3A9B9B]">
                 {t("whatWeDo.titleHighlight")}
@@ -286,7 +286,7 @@ export default function WhatWeDo() {
                         perspective: "1200px",
                       }}
                     >
-                      <Card3D className="w-full max-w-[260px]">
+                      <div className="w-full max-w-[260px] relative">
                         <div
                           className="w-full bg-white dark:bg-zinc-950 p-8 rounded-3xl border border-zinc-200 dark:border-zinc-800 shadow-xl flex flex-col items-center text-center group"
                           style={{
@@ -310,7 +310,7 @@ export default function WhatWeDo() {
                             {t(`whatWeDo.usps.${usp.titleKey}`)}
                           </h4>
                         </div>
-                      </Card3D>
+                      </div>
                     </div>
                   );
                 })}
@@ -352,11 +352,10 @@ export default function WhatWeDo() {
                     <button
                       key={idx}
                       onClick={() => goToSlide(idx)}
-                      className={`w-1.5 rounded-full mx-auto transition-all duration-300 ${
-                        idx === activeUspIndex
-                          ? "h-6 bg-[#3A9B9B]"
-                          : "h-1.5 bg-zinc-300 dark:bg-zinc-800 hover:bg-zinc-400"
-                      }`}
+                      className={`w-1.5 rounded-full mx-auto transition-all duration-300 ${idx === activeUspIndex
+                        ? "h-6 bg-[#3A9B9B]"
+                        : "h-1.5 bg-zinc-300 dark:bg-zinc-800 hover:bg-zinc-400"
+                        }`}
                       aria-label={`Go to USP ${idx + 1}`}
                     />
                   ))}

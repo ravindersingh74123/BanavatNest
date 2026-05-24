@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { CircleDot, ArrowRight } from 'lucide-react';
+import { CircleDot, ArrowRight, Beaker, Cpu, Trophy, Network, GraduationCap, Star, Zap } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import PageWrapper from '@/components/PageWrapper';
@@ -31,126 +31,211 @@ export default function BoardPage() {
     const t = useTranslations('aboutBoard');
     const tBoard = useTranslations('boardPage');
 
-    const featurePoints = [
-        { title: tBoard('feat1'), color: 'bg-[#3A9B9B]' },
-        { title: tBoard('feat2'), color: 'bg-[#2D3561]' },
-        { title: tBoard('feat3'), color: 'bg-[#3A9B9B]' },
-    ];
 
     return (
         <PageWrapper>
             <div className="min-h-screen bg-white dark:bg-zinc-900 transition-colors">
 
                 {/* ── Section 1: STEP-TIET Incubation Mentor ── */}
-                <section className="py-16 pt-32 transition-colors duration-300 flex items-center grid-bg">
-                    <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+                <section className="relative pt-24 overflow-hidden grid-bg min-h-[90vh] flex items-center">
+                    <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="text-center mb-14">
+                            <motion.h2
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.6, delay: 0.1 }}
+                                className="text-3xl md:text-5xl lg:text-6xl font-bold text-zinc-900 dark:text-zinc-100 mb-4"
+                            >
+                                {tBoard('heroTitle')} <span className="text-[#3A9B9B]">{tBoard('heroHighlight')}</span>
+                            </motion.h2>
+                        </div>
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.6 }}
-                            className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center"
-                        >
-                            {/* Left: Content */}
-                            <div>
-                                <motion.div
-                                    initial={{ opacity: 0, scale: 0.95 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    transition={{ delay: 0.1, duration: 0.5 }}
-                                    className="inline-flex items-center gap-2 rounded-full border border-[#3A9B9B]/20 bg-[#E8F7F7] dark:bg-zinc-900/70 dark:border-[#3A9B9B]/30 px-5 py-2.5 mb-8"
-                                >
-                                    <SparklesIcon className="w-4 h-4 text-[#3A9B9B]" />
-                                    <span className="text-xs sm:text-sm font-bold tracking-widest text-[#2D3561] dark:text-[#3A9B9B] uppercase">
-                                        {tBoard('badge')}
-                                    </span>
-                                </motion.div>
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.7 }}
+                            className="relative rounded-[2.5rem] border border-white/40 dark:border-white/10 overflow-hidden shadow-[0_20px_60px_rgba(15,23,42,0.1)] backdrop-blur-sm bg-gradient-to-br from-[#3A9B9B]/5 via-white/60 to-[#2D3561]/5 dark:from-[#3A9B9B]/10 dark:via-zinc-900/80 dark:to-[#2D3561]/10">
+                            {/* Main Grid */}
+                            <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr]">
+                                {/* Decorative Accent Line */}
+                                <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#2D3561] via-[#3A9B9B] to-[#2D3561] z-20" />
 
-                                <h1 className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter leading-tight text-zinc-900 dark:text-zinc-100 mb-8">
-                                    {tBoard('heroTitle')} <span className="text-[#3A9B9B]">{tBoard('heroHighlight')}</span>
-                                </h1>
+                                {/* LEFT SIDE */}
+                                <div className="relative p-6 md:p-10 lg:p-12">
+                                    {/* subtle dots */}
+                                    <div className="absolute inset-0 opacity-[0.04] pointer-events-none bg-[radial-gradient(#3A9B9B_1px,transparent_1px)] [background-size:16px_16px]" />
 
-                                <div className="w-16 h-1 bg-[#3A9B9B] rounded-full mb-8" />
+                                    <div className="relative z-10">
+                                        {/* Heading */}
+                                        <h2 className="text-2xl md:text-4xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-br from-[#111827] via-[#2D3561] to-[#3A9B9B] dark:from-white dark:via-zinc-200 dark:to-[#3A9B9B] leading-tight mb-6">
+                                            {tBoard('tietTitle')}
+                                        </h2>
 
-                                <p className="text-lg md:text-xl font-medium leading-relaxed text-zinc-600 dark:text-zinc-400 max-w-2xl">
-                                    <a href="https://www.thapar.edu/academics/centers/science-technology-entrepreneurs-park-step"
-                                        target="_blank" rel="noopener noreferrer"
-                                        className="font-bold text-[#2D3561] dark:text-zinc-100 hover:text-[#3A9B9B] transition-colors"
-                                    >Science &amp; Technology Entrepreneurs Park (STEP)</a>{' '}
-                                    {tBoard('heroDesc')}{' '}
-                                    <a href="https://thapar.edu/" target="_blank" rel="noopener noreferrer"
-                                        className="font-bold text-[#3A9B9B] hover:underline transition-colors"
-                                    >Thapar Institute of Engineering and Technology (TIET)</a>
-                                </p>
-                            </div>
+                                        {/* Stats Card */}
+                                        <div className="bg-white/85 dark:bg-zinc-900/85 backdrop-blur-xl border border-white/60 dark:border-white/10 rounded-[1.5rem] p-5 md:p-6 shadow-md mb-8">
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
 
-                            {/* Right: Card */}
-                            <motion.div
-                                initial={{ opacity: 0, y: 30 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.2, duration: 0.7 }}
-                                whileHover={{ y: -8 }}
-                                className="group relative"
-                            >
-                                <div className="rounded-[2.5rem] border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 p-8 md:p-10 shadow-xl hover:shadow-2xl transition-all duration-300 dark:hover:border-[#3A9B9B]/30 dark:hover:shadow-[0_0_40px_rgba(58,155,155,0.15)]">
-                                    {/* Top row */}
-                                    <div className="flex items-center justify-between mb-10 gap-4">
-                                        <div className="flex items-center gap-5 min-w-0">
-                                            <div className="h-16 w-16 shrink-0 rounded-2xl bg-[#E8F7F7] dark:bg-zinc-800/70 flex items-center justify-center border border-[#3A9B9B]/20">
-                                                <span className="text-3xl font-black text-[#3A9B9B]">S</span>
-                                            </div>
-                                            <div>
-                                                <a href="https://www.thapar.edu/academics/centers/science-technology-entrepreneurs-park-step"
-                                                    target="_blank" rel="noopener noreferrer"
-                                                    className="text-2xl md:text-3xl font-bold text-zinc-900 dark:text-zinc-100 leading-tight hover:text-[#3A9B9B] transition-colors"
-                                                >STEP-TIET</a>
-                                                <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400 mt-1 leading-relaxed">{tBoard('cardSubtitle')}</p>
+                                                {/* Item 1 */}
+                                                <div className="flex items-center gap-3">
+                                                    <div className="h-12 w-12 rounded-xl bg-[#E8F7F7] flex items-center justify-center shrink-0">
+                                                        <GraduationCap className="w-6 h-6 text-[#148787]" />
+                                                    </div>
+
+                                                    <div>
+                                                        <h4 className="text-lg font-black text-[#111827] dark:text-white">
+                                                            {tBoard('stat1Val')}
+                                                        </h4>
+                                                        <p className="text-xs text-zinc-600 font-medium">
+                                                            {tBoard('stat1Label')}
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                                {/* Item 2 */}
+                                                <div className="flex items-center gap-3 border-l border-zinc-200 px-4">
+                                                    <div className="h-12 w-12 rounded-xl bg-[#E8F7F7] flex items-center justify-center shrink-0">
+                                                        <Star className="w-6 h-6 text-[#148787]" />
+                                                    </div>
+
+                                                    <div>
+                                                        <h4 className="text-lg font-black text-[#111827] dark:text-white">
+                                                            {tBoard('stat2Val')}
+                                                        </h4>
+                                                        <p className="text-xs text-zinc-600 font-medium">
+                                                            {tBoard('stat2Label')}
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                                {/* Item 3 */}
+                                                {/* <div className="flex items-center gap-3">
+                                                    <div className="h-12 w-12 rounded-xl bg-[#E8F7F7] flex items-center justify-center shrink-0">
+                                                        <Zap className="w-6 h-6 text-[#148787]" />
+                                                    </div>
+
+                                                    <div>
+                                                        <h4 className="text-lg font-black text-[#111827]">
+                                                            {tBoard('stat3Val')}
+                                                        </h4>
+                                                        <p className="text-xs text-zinc-600 font-medium">
+                                                            {tBoard('stat3Label')}
+                                                        </p>
+                                                    </div>
+                                                </div> */}
                                             </div>
                                         </div>
-                                        <a href="https://www.thapar.edu/academics/centers/science-technology-entrepreneurs-park-step"
-                                            target="_blank" rel="noopener noreferrer"
-                                            className="h-12 w-12 shrink-0 rounded-full bg-[#3A9B9B]/10 flex items-center justify-center transition-transform duration-300 group-hover:scale-110"
-                                        >
-                                            <ArrowUpRightIcon className="w-5 h-5 text-[#3A9B9B]" />
-                                        </a>
-                                    </div>
+                                        <div className="w-full h-[3px] rounded-full bg-gradient-to-r from-[#2D3561] to-[#3A9B9B] mb-6" />
+                                        {/* Description */}
+                                        <div className="space-y-6">
+                                            <p className="text-lg text-justify md:text-xl leading-relaxed text-[#111827] dark:text-zinc-200 font-medium opacity-90">
+                                                {tBoard('desc1')}
+                                            </p>
 
-                                    {/* Description */}
-                                    <div className="space-y-6">
-                                        <p className="text-lg font-medium leading-relaxed text-zinc-600 dark:text-zinc-400">
-                                            {tBoard('cardSupportText')}{' '}
-                                            <span className="font-bold text-zinc-900 dark:text-zinc-100">BanavatNest</span>{' '}
-                                            {tBoard('cardSupportSuffix')}
-                                        </p>
-                                        <ul className="space-y-5">
-                                            {featurePoints.map((point) => (
-                                                <li key={point.title} className="flex items-start gap-4">
-                                                    <span className={`mt-2 h-2.5 w-2.5 rounded-full ${point.color} shrink-0`} />
-                                                    <span className="text-base md:text-lg font-bold text-zinc-800 dark:text-zinc-200">{point.title}</span>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                        {/* VentureLab link */}
-                                        <div className="pt-2 border-t border-zinc-100 dark:border-zinc-800">
-                                            <p className="text-sm text-zinc-500 dark:text-zinc-400 font-medium">
-                                                <a href="https://venturelab.org.in/" target="_blank" rel="noopener noreferrer"
-                                                    className="font-bold text-[#3A9B9B] hover:underline transition-colors"
-                                                >VentureLab | </a>
-                                                <a href="https://www.thapar.edu/academics/centers/science-technology-entrepreneurs-park-step" target="_blank" rel="noopener noreferrer"
-                                                    className="font-bold text-[#3A9B9B] hover:underline transition-colors"
-                                                >STEP TIET | </a>
-                                                <a href="https://thapar.edu/" target="_blank" rel="noopener noreferrer"
-                                                    className="font-bold text-[#3A9B9B] hover:underline transition-colors"
-                                                >TIET</a>
+                                            <p className="text-lg text-justify md:text-xl leading-relaxed text-[#111827] dark:text-zinc-200 font-medium opacity-90">
+                                                {tBoard('desc2')}
                                             </p>
                                         </div>
                                     </div>
                                 </div>
-                            </motion.div>
+
+                                {/* Divider */}
+                                <div className="hidden lg:block absolute left-[55%] top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-[#3A9B9B]/30 to-transparent" />
+
+                                {/* RIGHT SIDE */}
+                                <div className="relative p-6 md:p-10 lg:p-12">
+                                    <motion.div
+                                        whileHover={{ y: -5 }}
+                                        transition={{ duration: 0.3 }}
+                                        className="h-full rounded-[2rem] bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl border border-white/60 dark:border-white/10 shadow-[0_12px_40px_rgba(15,23,42,0.06)] p-6 md:p-8 ">
+                                        {/* Top */}
+                                        <div className="flex items-center gap-4 mb-6">
+                                            <div className="h-14 w-14 rounded-2xl bg-[#E8F7F7] flex items-center justify-center border border-[#3A9B9B]/10">
+                                                <svg
+                                                    className="w-7 h-7 text-[#148787]"
+                                                    fill="currentColor"
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <path d="M12 2L1 7h22L12 2zm9 7H3v2h18V9zm-2 4H5v7h14v-7z" />
+                                                </svg>
+                                            </div>
+
+                                            <div>
+                                                <h3 className="text-2xl font-black tracking-tight text-[#0F172A] dark:text-white">
+                                                    {tBoard('stepTietTitle')}
+                                                </h3>
+
+                                                <p className="text-sm text-zinc-600 font-semibold uppercase tracking-wider">
+                                                    {tBoard('stepTietSubtitle')}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div className="h-px bg-zinc-100 dark:bg-zinc-800 mb-6" />
+
+                                        {/* Intro */}
+                                        <p className="text-lg leading-relaxed text-[#0F172A] dark:text-zinc-200 mb-8 font-medium">
+                                            {tBoard('supportingText')}{" "}
+                                            <span className="font-black text-[#148787] dark:text-[#3A9B9B]">
+                                                BanavatNest
+                                            </span>{" "}
+                                            {tBoard('supportingIn')}
+                                        </p>
+
+                                        {/* Features */}
+                                        <div className="space-y-4">
+
+                                            {[
+                                                {
+                                                    title: tBoard('feat1Title'),
+                                                    desc: tBoard('feat1Desc'),
+                                                    icon: Beaker
+                                                },
+                                                {
+                                                    title: tBoard('feat2Title'),
+                                                    desc: tBoard('feat2Desc'),
+                                                    icon: Cpu
+                                                },
+                                                {
+                                                    title: tBoard('feat3Title'),
+                                                    desc: tBoard('feat3Desc'),
+                                                    icon: Trophy
+                                                },
+                                                {
+                                                    title: tBoard('feat4Title'),
+                                                    desc: tBoard('feat4Desc'),
+                                                    icon: Network
+                                                },
+                                            ].map((item, index) => (
+                                                <div
+                                                    key={index}
+                                                    className="flex gap-4 pb-4 border-b border-zinc-100 dark:border-zinc-800 last:border-none last:pb-0"
+                                                >
+                                                    <div className="h-12 w-12 rounded-xl bg-[#E8F7F7] border border-[#3A9B9B]/10 flex items-center justify-center shrink-0">
+                                                        <item.icon className="w-6 h-6 text-[#148787]" />
+                                                    </div>
+
+                                                    <div className="pt-0.5">
+                                                        <h4 className="text-lg font-black text-[#0F172A] dark:text-white">
+                                                            {item.title}
+                                                        </h4>
+
+                                                        <p className="text-sm text-zinc-600 leading-relaxed">
+                                                            {item.desc}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </motion.div>
+                                </div>
+                            </div>
                         </motion.div>
                     </div>
                 </section>
 
                 {/* ── Section 2: Board of Directors ── */}
-                <section className="py-16 px-4 sm:px-6 lg:px-8 grid-bg">
+                <section className="pt-16 pb-8 px-4 sm:px-6 lg:px-8 grid-bg">
                     <div className="max-w-7xl mx-auto">
 
                         {/* Section heading */}
@@ -164,13 +249,6 @@ export default function BoardPage() {
                             >
                                 {tBoard('boardTitle')} <span className="text-[#3A9B9B]">{tBoard('boardHighlight')}</span>
                             </motion.h2>
-                            <motion.div
-                                initial={{ scaleX: 0 }}
-                                whileInView={{ scaleX: 1 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: 0.3, duration: 0.5 }}
-                                className="mx-auto w-20 h-[3px] rounded-full bg-gradient-to-r from-[#2D3561] to-[#3A9B9B]"
-                            />
                         </div>
 
                         {/* Director cards */}
@@ -191,11 +269,11 @@ export default function BoardPage() {
                                     </div>
                                     <div className="flex-grow">
                                         <h3 className="text-xl md:text-2xl font-black text-zinc-900 dark:text-zinc-100 mb-1 whitespace-nowrap">{t('sukhdevName')}</h3>
-                                        <p className="text-zinc-500 dark:text-zinc-400 font-semibold text-sm mb-1 uppercase tracking-wide">{t('sukhdevEdu')}</p>
+                                        <p className="text-zinc-500 dark:text-zinc-400 font-semibold text-sm mb-1 tracking-wide">{t('sukhdevEdu')}</p>
                                         <p className="text-[#3A9B9B] font-bold text-sm uppercase tracking-widest leading-tight">{t('sukhdevRole')}</p>
                                     </div>
                                 </div>
-                                <p className="text-zinc-600 dark:text-zinc-400 text-lg leading-relaxed mb-6 font-medium">{t('sukhdevBio')}</p>
+                                <p className="text-zinc-600 dark:text-zinc-400 text-lg leading-relaxed text-justify mb-6 font-medium">{t('sukhdevBio')}</p>
                                 <ul className="space-y-3 text-zinc-500 dark:text-zinc-500 font-bold text-sm mb-8">
                                     <li className="flex items-center"><CircleDot className="w-4 h-4 mr-3 text-[#3A9B9B]" /> {t('sukhdevAch1')}</li>
                                     <li className="flex items-center"><CircleDot className="w-4 h-4 mr-3 text-[#3A9B9B]" /> {t('sukhdevAch2')}</li>
@@ -222,11 +300,11 @@ export default function BoardPage() {
                                     </div>
                                     <div className="flex-grow">
                                         <h3 className="text-xl md:text-2xl font-black text-zinc-900 dark:text-zinc-100 mb-1 whitespace-nowrap">{t('sangitaName')}</h3>
-                                        <p className="text-zinc-500 dark:text-zinc-400 font-semibold text-sm mb-1 uppercase tracking-wide">{t('sangitaEdu')}</p>
+                                        <p className="text-zinc-500 dark:text-zinc-400 font-semibold text-sm mb-1 tracking-wide">{t('sangitaEdu')}</p>
                                         <p className="text-[#3A9B9B] font-bold text-sm uppercase tracking-widest leading-tight">{t('sangitaRole')}</p>
                                     </div>
                                 </div>
-                                <p className="text-zinc-600 dark:text-zinc-400 text-lg leading-relaxed mb-6 font-medium">{t('sangitaBio')}</p>
+                                <p className="text-zinc-600 dark:text-zinc-400 text-lg leading-relaxed mb-6 text-justify  font-medium">{t('sangitaBio')}</p>
                                 <ul className="space-y-3 text-zinc-500 dark:text-zinc-500 font-bold text-sm mb-8">
                                     <li className="flex items-center"><CircleDot className="w-4 h-4 mr-3 text-[#3A9B9B]" /> {t('sangitaAch1')}</li>
                                     <li className="flex items-center"><CircleDot className="w-4 h-4 mr-3 text-[#3A9B9B]" /> {t('sangitaAch2')}</li>

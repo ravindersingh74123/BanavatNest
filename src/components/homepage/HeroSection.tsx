@@ -30,17 +30,16 @@ export default function HeroSection() {
           transition={{ duration: 8, repeat: Infinity }}
           className="hidden dark:block absolute z-10 top-[15%] right-[22%] w-[560px] h-[560px] rounded-full bg-[#3A9B9B]/10 blur-[160px] pointer-events-none"
         />
+        {/* Tagline */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, duration: 0.5 }}
+          className="mt-3 pb-4 text-center text-zinc-600 dark:text-zinc-400 w-full mx-auto px-4 text-sm md:text-base lg:text-xl font-medium tracking-wide relative z-20"
+        >
+          {t("heroTagline")}
+        </motion.div>
       </section>
-
-      {/* Tagline */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5, duration: 0.5 }}
-        className="mt-3 pb-4 text-center text-zinc-600 dark:text-zinc-400 w-full mx-auto px-4 text-sm md:text-base lg:text-xl font-medium tracking-wide"
-      >
-        {t("heroTagline")}
-      </motion.div>
     </>
   );
 }

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Noto_Sans_Devanagari, Noto_Sans_Bengali } from "next/font/google";
+import { Inter, Noto_Sans_Devanagari, Noto_Sans_Bengali, Noto_Sans_Gurmukhi } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { routing } from "@/i18n/routing";
@@ -24,6 +24,12 @@ const notoBengali = Noto_Sans_Bengali({
     subsets: ["bengali"],
     weight: ["300", "400", "500", "600", "700", "800"],
     variable: "--font-bengali",
+});
+
+const notoGurmukhi = Noto_Sans_Gurmukhi({
+    subsets: ["gurmukhi"],
+    weight: ["300", "400", "500", "600", "700", "800"],
+    variable: "--font-gurmukhi",
 });
 
 export const metadata: Metadata = {
@@ -188,7 +194,7 @@ export default async function LocaleLayout({
             case 'hi':
                 return `${inter.variable} ${notoDevanagari.variable} font-sans`;
             case 'pa':
-                return `${inter.variable} ${notoDevanagari.variable} font-sans`;
+                return `${inter.variable} ${notoGurmukhi.variable} font-sans`;
             case 'bn':
                 return `${inter.variable} ${notoBengali.variable} font-sans`;
             default:
@@ -226,7 +232,7 @@ export default async function LocaleLayout({
             <body
                 className={`${getFontClass()} antialiased min-h-screen flex flex-col selection:bg-[#3A9B9B]/20 selection:text-[#2D3561] dark:selection:text-zinc-100 transition-colors bg-zinc-50 dark:bg-[#09090b]`}
             >
-                <NextIntlClientProvider messages={messages}>
+                <NextIntlClientProvider locale={locale} messages={messages}>
                     <Navbar />
                     <main className="flex-grow">{children}</main>
                     <Footer />

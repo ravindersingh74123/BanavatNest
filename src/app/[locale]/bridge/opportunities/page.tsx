@@ -257,7 +257,7 @@ const GrowthCard = ({
                     border border-t-8 overflow-hidden
                     flex flex-col items-center text-center cursor-pointer
                 `}
-                style={{ 
+                style={{
                     borderTopColor: color,
                     borderColor: color,
                     boxShadow: `0 20px 40px -12px ${color}30`
@@ -268,13 +268,12 @@ const GrowthCard = ({
                     className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none hidden dark:block"
                     style={{ background: `radial-gradient(circle at top, ${color}22, transparent 70%)` }}
                 />
-                
-                <Illustration />
-                
+
                 <div className="relative z-10 flex-grow">
                     <h3 className="text-3xl font-black text-zinc-900 dark:text-zinc-100 mb-4 tracking-tight leading-tight transition-colors">
                         {title}
                     </h3>
+                    <Illustration />
                     <p className="text-lg text-zinc-600 dark:text-zinc-400 font-medium leading-relaxed mb-10 transition-colors">
                         {desc}
                     </p>
@@ -328,52 +327,53 @@ const GrowthPathProfile = ({ name, role, delay }: { name: string, role: string, 
 // ── Section 1: What Students Get ──
 // ─────────────────────────────────────────────────────────────
 
-const studentBenefits = [
-    {
-        icon: Lightbulb,
-        emoji: '💡',
-        title: 'Hands-on Project Experience',
-        desc: 'Work on real industry and research problems that create measurable impact.',
-        color: '#F59E0B',
-        glow: 'rgba(245,158,11,0.25)',
-    },
-    {
-        icon: Settings,
-        emoji: '⚙️',
-        title: 'Prototype Development Exposure',
-        desc: 'Take your idea from concept → design → fully working model.',
-        color: '#3B82F6',
-        glow: 'rgba(59,130,246,0.25)',
-    },
-    {
-        icon: Brain,
-        emoji: '🧠',
-        title: 'Multidomain Learning',
-        desc: 'Explore AI, Cybersecurity, IoT, Blockchain, and Smart Systems.',
-        color: '#A855F7',
-        glow: 'rgba(168,85,247,0.25)',
-    },
-    {
-        icon: Users,
-        emoji: '🤝',
-        title: 'Mentorship from Experts',
-        desc: 'Guidance from leading figures across academia and industry.',
-        color: '#3A9B9B',
-        glow: 'rgba(58,155,155,0.25)',
-    },
-    {
-        icon: Award,
-        emoji: '📜',
-        title: 'Certification & Recognition',
-        desc: 'Earn certificates, showcase projects, and receive recommendation letters.',
-        color: '#EC4899',
-        glow: 'rgba(236,72,153,0.25)',
-    },
-];
-
 const WhatStudentsGetSection = () => {
+    const t = useTranslations('opportunities');
     const [activeIndex, setActiveIndex] = useState(0);
     const [direction, setDirection] = useState(1);
+
+    const studentBenefits = [
+        {
+            icon: Lightbulb,
+            emoji: '💡',
+            title: t('benefit1Title'),
+            desc: t('benefit1Desc'),
+            color: '#F59E0B',
+            glow: 'rgba(245,158,11,0.25)',
+        },
+        {
+            icon: Settings,
+            emoji: '⚙️',
+            title: t('benefit2Title'),
+            desc: t('benefit2Desc'),
+            color: '#3B82F6',
+            glow: 'rgba(59,130,246,0.25)',
+        },
+        {
+            icon: Brain,
+            emoji: '🧠',
+            title: t('benefit3Title'),
+            desc: t('benefit3Desc'),
+            color: '#A855F7',
+            glow: 'rgba(168,85,247,0.25)',
+        },
+        {
+            icon: Users,
+            emoji: '🤝',
+            title: t('benefit4Title'),
+            desc: t('benefit4Desc'),
+            color: '#3A9B9B',
+            glow: 'rgba(58,155,155,0.25)',
+        },
+        {
+            icon: Award,
+            emoji: '📜',
+            title: t('benefit5Title'),
+            desc: t('benefit5Desc'),
+            color: '#EC4899',
+            glow: 'rgba(236,72,153,0.25)',
+        },
+    ];
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -423,7 +423,7 @@ const WhatStudentsGetSection = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
             viewport={{ once: true, margin: "-50px" }}
-            className="relative py-12 overflow-hidden"
+            className="relative pt-16 overflow-hidden"
         >
             {/* Background Blur Only */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#3A9B9B]/5 blur-[150px] rounded-full pointer-events-none" />
@@ -440,10 +440,10 @@ const WhatStudentsGetSection = () => {
                             className="text-left"
                         >
                             <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-zinc-900 dark:text-zinc-100 tracking-tighter mb-6 leading-tight">
-                                What Students <span className="text-[#3A9B9B] whitespace-nowrap">Get</span>
+                                {t('getStudentsTitle')} <span className="text-[#3A9B9B] whitespace-nowrap">{t('getStudentsHighlight')}</span>
                             </h2>
                             <p className="text-lg md:text-xl text-zinc-500 dark:text-zinc-400 font-medium leading-relaxed max-w-lg">
-                                More than an internship — a launchpad for your future career and research journey.
+                                {t('getStudentsDesc')}
                             </p>
                         </motion.div>
                     </div>
@@ -467,32 +467,34 @@ const WhatStudentsGetSection = () => {
                                     className="absolute inset-0 w-full"
                                 >
                                     <div style={{ perspective: '1200px' }} className="absolute inset-0 w-full">
-                                    <Card3D className="h-full">
-                                    <div
-                                        className="relative h-full flex flex-col justify-center p-8 md:p-12 rounded-[2rem] bg-gradient-to-br from-[#3A9B9B]/5 via-white/60 to-[#2D3561]/5 dark:from-[#3A9B9B]/10 dark:via-zinc-900/80 dark:to-[#2D3561]/10 backdrop-blur-sm border border-zinc-200 dark:border-zinc-800/80 cursor-pointer transition-all duration-500"
-                                        style={{ boxShadow: '0 20px 40px -10px rgba(0,0,0,0.05)' }}
-                                    >
-                                        {/* Content Wrapper */}
-                                        <div className="relative z-10 flex flex-col items-start">
+                                        <Card3D className="h-full">
                                             <div
-                                                className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6 text-3xl"
-                                                style={{
-                                                    backgroundColor: `${benefit.color}15`,
-                                                    border: `1.5px solid ${benefit.color}30`,
-                                                    boxShadow: `0 8px 20px -5px ${benefit.glow}`
-                                                }}
+                                                className="relative h-full flex flex-col justify-center p-8 md:p-12 rounded-[2rem] bg-gradient-to-br from-[#3A9B9B]/5 via-white/60 to-[#2D3561]/5 dark:from-[#3A9B9B]/10 dark:via-zinc-900/80 dark:to-[#2D3561]/10 backdrop-blur-sm border border-zinc-200 dark:border-zinc-800/80 cursor-pointer transition-all duration-500 overflow-hidden"
+                                                style={{ boxShadow: '0 20px 40px -10px rgba(0,0,0,0.05)' }}
                                             >
-                                                <span>{benefit.emoji}</span>
+                                                {/* Decorative Accent Line */}
+                                                <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#2D3561] via-[#3A9B9B] to-[#2D3561] z-20" />
+                                                {/* Content Wrapper */}
+                                                <div className="relative z-10 flex flex-col items-start">
+                                                    <div
+                                                        className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6 text-3xl"
+                                                        style={{
+                                                            backgroundColor: `${benefit.color}15`,
+                                                            border: `1.5px solid ${benefit.color}30`,
+                                                            boxShadow: `0 8px 20px -5px ${benefit.glow}`
+                                                        }}
+                                                    >
+                                                        <span>{benefit.emoji}</span>
+                                                    </div>
+                                                    <h3 className="text-2xl md:text-3xl font-black text-zinc-900 dark:text-zinc-100 mb-3 tracking-tight transition-colors">
+                                                        {benefit.title}
+                                                    </h3>
+                                                    <p className="text-base md:text-lg text-zinc-500 dark:text-zinc-400 font-medium leading-relaxed transition-colors">
+                                                        {benefit.desc}
+                                                    </p>
+                                                </div>
                                             </div>
-                                            <h3 className="text-2xl md:text-3xl font-black text-zinc-900 dark:text-zinc-100 mb-3 tracking-tight transition-colors">
-                                                {benefit.title}
-                                            </h3>
-                                            <p className="text-base md:text-lg text-zinc-500 dark:text-zinc-400 font-medium leading-relaxed transition-colors">
-                                                {benefit.desc}
-                                            </p>
-                                        </div>
-                                    </div>
-                                    </Card3D>
+                                        </Card3D>
                                     </div>
                                 </motion.div>
                             </AnimatePresence>
@@ -539,247 +541,261 @@ const WhatStudentsGetSection = () => {
 // ── Section 2: Types of Opportunities ──
 // ─────────────────────────────────────────────────────────────
 
-const opportunityTypes = [
-    {
-        icon: '🎓',
-        title: 'Internships',
-        color: '#3B82F6',
-        glow: 'rgba(59,130,246,0.2)',
-        borderColor: 'rgba(59,130,246,0.3)',
-        items: [
-            { icon: Clock, text: 'Short-term & Long-term durations' },
-            { icon: BookOpen, text: 'Research + Industry-based tracks' },
-            { icon: Globe, text: 'Hybrid / Remote options available' },
-        ],
-    },
-    {
-        icon: '🚀',
-        title: 'Innovation & Startup Support',
-        color: '#3A9B9B',
-        glow: 'rgba(58,155,155,0.2)',
-        borderColor: 'rgba(58,155,155,0.3)',
-        items: [
-            { icon: Sparkles, text: 'Work on ongoing BanavatNest projects' },
-            { icon: Settings, text: 'Convert your idea into a prototype' },
-            { icon: ChevronRight, text: 'Guidance for funding & incubation' },
-        ],
-    },
-];
+const TypesOfOpportunitiesSection = () => {
+    const t = useTranslations('opportunities');
 
-const TypesOfOpportunitiesSection = () => (
-    <motion.section
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
-        viewport={{ once: true, margin: "-50px" }}
-        className="relative py-12 overflow-hidden"
-    >
-        <div className="absolute bottom-0 right-0 w-[600px] h-[400px] bg-blue-500/5 blur-[120px] rounded-full pointer-events-none" />
-        <div className="absolute top-0 left-0 w-[500px] h-[400px] bg-[#3A9B9B]/5 blur-[100px] rounded-full pointer-events-none" />
+    const opportunityTypes = [
+        {
+            icon: '🎓',
+            title: t('internshipsTitle'),
+            color: '#3B82F6',
+            glow: 'rgba(59,130,246,0.2)',
+            borderColor: 'rgba(59,130,246,0.3)',
+            items: [
+                { icon: Clock, text: t('internshipsItem1') },
+                { icon: BookOpen, text: t('internshipsItem2') },
+                { icon: Globe, text: t('internshipsItem3') },
+            ],
+        },
+        {
+            icon: '🚀',
+            title: t('innovationTitle'),
+            color: '#3A9B9B',
+            glow: 'rgba(58,155,155,0.2)',
+            borderColor: 'rgba(58,155,155,0.3)',
+            items: [
+                { icon: Sparkles, text: t('innovationItem1') },
+                { icon: Settings, text: t('innovationItem2') },
+                { icon: ChevronRight, text: t('innovationItem3') },
+            ],
+        },
+    ];
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            {/* Header */}
-            <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.7 }}
-                className="text-center mb-20 max-w-3xl mx-auto"
-            >
+    return (
+        <motion.section
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
+            viewport={{ once: true, margin: "-50px" }}
+            className="relative pt-16 overflow-hidden"
+        >
+            <div className="absolute bottom-0 right-0 w-[600px] h-[400px] bg-blue-500/5 blur-[120px] rounded-full pointer-events-none" />
+            <div className="absolute top-0 left-0 w-[500px] h-[400px] bg-[#3A9B9B]/5 blur-[100px] rounded-full pointer-events-none" />
 
-                <h2 className="text-5xl md:text-6xl font-black text-zinc-900 dark:text-zinc-100 tracking-tighter leading-tight">
-                    Types of <span className="text-blue-400">Opportunities</span>
-                </h2>
-            </motion.div>
+            <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                {/* Header */}
+                <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.7 }}
+                    className="text-center mb-20 max-w-3xl mx-auto"
+                >
 
-            {/* Two column layout */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {opportunityTypes.map((type, i) => (
-                    <motion.div
-                        key={i}
-                        initial={{ opacity: 0, x: i === 0 ? -40 : 40 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.6, delay: i * 0.15 }}
-                        style={{ perspective: '1200px' }}
-                    >
-                    <Card3D>
-                        <div
-                        className="group relative p-10 rounded-[2rem] bg-gradient-to-br from-[#3A9B9B]/5 via-white/60 to-[#2D3561]/5 dark:from-[#3A9B9B]/10 dark:via-zinc-900/80 dark:to-[#2D3561]/10 backdrop-blur-sm border border-zinc-200 dark:border-zinc-800 overflow-hidden cursor-pointer transition-all duration-500"
-                        style={{ boxShadow: '0 8px 30px -10px rgba(0,0,0,0.07)' }}
-                    >
-                        {/* Static Glow bg */}
-                        <div
-                            className="absolute inset-0 opacity-10 pointer-events-none"
-                            style={{ background: `radial-gradient(ellipse at top left, ${type.glow}, transparent 65%)` }}
-                        />
+                    <h2 className="text-5xl md:text-6xl font-black text-zinc-900 dark:text-zinc-100 tracking-tighter leading-tight">
+                        {t('typesTitle')} <span className="text-[#3A9B9B]">{t('typesHighlight')}</span>
+                    </h2>
+                </motion.div>
 
-                        {/* Header */}
-                        <div className="relative z-10 flex items-center gap-4 mb-10">
-                            <div
-                                className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl"
-                                style={{
-                                    backgroundColor: `${type.color}15`,
-                                    border: `2px solid ${type.borderColor}`,
-                                    boxShadow: `0 10px 30px -10px ${type.glow}`
-                                }}
-                            >
-                                {type.icon}
-                            </div>
-                            <h3 className="text-2xl font-black text-zinc-900 dark:text-zinc-100 tracking-tight">{type.title}</h3>
-                        </div>
-
-                        {/* Items */}
-                        <div className="relative z-10 flex flex-col gap-5">
-                            {type.items.map((item, j) => (
-                                <motion.div
-                                    key={j}
-                                    initial={{ opacity: 0, x: -10 }}
-                                    whileInView={{ opacity: 1, x: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ delay: 0.2 + j * 0.08 }}
-                                    className="flex items-center gap-4"
+                {/* Two column layout */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    {opportunityTypes.map((type, i) => (
+                        <motion.div
+                            key={i}
+                            initial={{ opacity: 0, x: i === 0 ? -40 : 40 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.6, delay: i * 0.15 }}
+                            style={{ perspective: '1200px' }}
+                        >
+                            <Card3D>
+                                <div
+                                    className="group relative p-10 rounded-[2rem] bg-gradient-to-br from-[#3A9B9B]/5 via-white/60 to-[#2D3561]/5 dark:from-[#3A9B9B]/10 dark:via-zinc-900/80 dark:to-[#2D3561]/10 backdrop-blur-sm border border-zinc-200 dark:border-zinc-800 overflow-hidden cursor-pointer transition-all duration-500"
+                                    style={{ boxShadow: '0 8px 30px -10px rgba(0,0,0,0.07)' }}
                                 >
+                                    {/* Decorative Accent Line */}
+                                    <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#2D3561] via-[#3A9B9B] to-[#2D3561] z-20" />
+                                    {/* Static Glow bg */}
                                     <div
-                                        className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
-                                        style={{
-                                            backgroundColor: `${type.color}15`,
-                                            border: `1px solid ${type.borderColor}`,
-                                        }}
-                                    >
-                                        <item.icon className="w-4 h-4" style={{ color: type.color }} />
+                                        className="absolute inset-0 opacity-10 pointer-events-none"
+                                        style={{ background: `radial-gradient(ellipse at top left, ${type.glow}, transparent 65%)` }}
+                                    />
+
+                                    {/* Header */}
+                                    <div className="relative z-10 flex items-center gap-4 mb-10">
+                                        <div
+                                            className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl"
+                                            style={{
+                                                backgroundColor: `${type.color}15`,
+                                                border: `2px solid ${type.borderColor}`,
+                                                boxShadow: `0 10px 30px -10px ${type.glow}`
+                                            }}
+                                        >
+                                            {type.icon}
+                                        </div>
+                                        <h3 className="text-2xl font-black text-zinc-900 dark:text-zinc-100 tracking-tight">{type.title}</h3>
                                     </div>
-                                    <span className="text-zinc-600 dark:text-zinc-300 font-medium leading-snug transition-colors">
-                                        {item.text}
-                                    </span>
-                                </motion.div>
-                            ))}
-                        </div>
-                        </div>
-                    </Card3D>
-                    </motion.div>
-                ))}
+
+                                    {/* Items */}
+                                    <div className="relative z-10 flex flex-col gap-5">
+                                        {type.items.map((item, j) => (
+                                            <motion.div
+                                                key={j}
+                                                initial={{ opacity: 0, x: -10 }}
+                                                whileInView={{ opacity: 1, x: 0 }}
+                                                viewport={{ once: true }}
+                                                transition={{ delay: 0.2 + j * 0.08 }}
+                                                className="flex items-center gap-4"
+                                            >
+                                                <div
+                                                    className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+                                                    style={{
+                                                        backgroundColor: `${type.color}15`,
+                                                        border: `1px solid ${type.borderColor}`,
+                                                    }}
+                                                >
+                                                    <item.icon className="w-4 h-4" style={{ color: type.color }} />
+                                                </div>
+                                                <span className="text-zinc-600 dark:text-zinc-300 font-medium leading-snug transition-colors">
+                                                    {item.text}
+                                                </span>
+                                            </motion.div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </Card3D>
+                        </motion.div>
+                    ))}
+                </div>
             </div>
-        </div>
-    </motion.section>
-);
+        </motion.section>
+    );
+};
 
 // ─────────────────────────────────────────────────────────────
 // ── Section 3: Who Can Apply + Selection Process ──
 // ─────────────────────────────────────────────────────────────
 
-const eligibilityCriteria = [
-    { icon: GraduationCap, text: 'Undergraduate & Postgraduate Students', color: '#3B82F6' },
-    { icon: BookOpen, text: 'Engineering / Science / Mathematics backgrounds', color: '#A855F7' },
-    { icon: Sparkles, text: 'Passionate learners — skills matter more than marks', color: '#3A9B9B' },
-];
+const WhoCanApplySection = () => {
+    const t = useTranslations('opportunities');
 
-const selectionSteps = [
-    { step: '01', label: 'Apply Online', desc: 'Fill out the application form with your interests.' },
-    { step: '02', label: 'Idea & Interest Evaluation', desc: 'We review your ideas and areas of interest.' },
-    { step: '03', label: 'Interaction & Discussion', desc: 'A friendly conversation about your goals.' },
-    { step: '04', label: 'Selection', desc: 'Selected candidates are notified and onboarded.' },
-];
+    const eligibilityCriteria = [
+        { icon: GraduationCap, text: t('eligibilityItem1'), color: '#3B82F6' },
+        { icon: BookOpen, text: t('eligibilityItem2'), color: '#A855F7' },
+        { icon: Sparkles, text: t('eligibilityItem3'), color: '#3A9B9B' },
+    ];
 
-const WhoCanApplySection = () => (
-    <motion.section
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
-        viewport={{ once: true, margin: "-50px" }}
-        className="relative py-12 overflow-hidden"
-    >
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-[#3A9B9B]/4 blur-[150px] rounded-full pointer-events-none" />
+    const selectionSteps = [
+        { step: '01', label: t('selectionStep1Title'), desc: t('selectionStep1Desc') },
+        { step: '02', label: t('selectionStep2Title'), desc: t('selectionStep2Desc') },
+        { step: '03', label: t('selectionStep3Title'), desc: t('selectionStep3Desc') },
+        { step: '04', label: t('selectionStep4Title'), desc: t('selectionStep4Desc') },
+    ];
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            {/* Header */}
-            <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.7 }}
-                className="text-center mb-20 max-w-3xl mx-auto"
-            >
+    return (
+        <motion.section
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
+            viewport={{ once: true, margin: "-50px" }}
+            className="relative pt-16 overflow-hidden"
+        >
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-[#3A9B9B]/4 blur-[150px] rounded-full pointer-events-none" />
 
-                <h2 className="text-5xl md:text-6xl font-black text-zinc-900 dark:text-zinc-100 tracking-tighter leading-tight">
-                    Who Can <span className="text-[#3A9B9B]">Apply?</span>
-                </h2>
-            </motion.div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-                {/* Eligibility */}
+            <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                {/* Header */}
                 <motion.div
-                    initial={{ opacity: 0, x: -40 }}
-                    whileInView={{ opacity: 1, x: 0 }}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.6 }}
-                    className="p-8 rounded-3xl border border-zinc-200 dark:border-zinc-800/80"
+                    transition={{ duration: 0.7 }}
+                    className="text-center mb-20 max-w-3xl mx-auto"
                 >
-                    <h3 className="text-2xl font-black text-zinc-900 dark:text-zinc-100 mb-8 tracking-tight">Eligibility Criteria</h3>
-                    <div className="flex flex-col gap-5">
-                        {eligibilityCriteria.map((item, i) => (
-                            <motion.div
-                                key={i}
-                                initial={{ opacity: 0, x: -20 }}
-                                whileInView={{ opacity: 1, x: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: i * 0.1 }}
-                                className="flex items-center gap-5 p-5 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-100 dark:border-zinc-800 cursor-default transition-all duration-300"
-                            >
-                                <div
-                                    className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
-                                    style={{ backgroundColor: `${item.color}15`, border: `1.5px solid ${item.color}30` }}
-                                >
-                                    <item.icon className="w-6 h-6" style={{ color: item.color }} />
-                                </div>
-                                <span className="text-zinc-700 dark:text-zinc-200 font-semibold leading-snug">{item.text}</span>
-                            </motion.div>
-                        ))}
-                    </div>
+
+                    <h2 className="text-5xl md:text-6xl font-black text-zinc-900 dark:text-zinc-100 tracking-tighter leading-tight">
+                        {t('applyTitle')} <span className="text-[#3A9B9B]">{t('applyHighlight')}</span>
+                    </h2>
                 </motion.div>
 
-                {/* Selection Process */}
-                <motion.div
-                    initial={{ opacity: 0, x: 40 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: 0.1 }}
-                    className="p-8 rounded-3xl border border-zinc-200 dark:border-zinc-800/80"
-                >
-                    <h3 className="text-2xl font-black text-zinc-900 dark:text-zinc-100 mb-8 tracking-tight">
-                        Selection Process — <span className="text-[#3A9B9B]">Simple & Transparent</span>
-                    </h3>
-                    <div className="relative flex flex-col gap-0">
-                        {/* Connecting line */}
-                        <div className="absolute left-6 top-12 bottom-12 w-[2px] bg-gradient-to-b from-[#3A9B9B]/40 via-blue-500/20 to-transparent" />
-
-                        {selectionSteps.map((step, i) => (
-                            <motion.div
-                                key={i}
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: 0.2 + i * 0.12 }}
-                                className="relative flex items-start gap-6 pb-8 last:pb-0 cursor-default"
-                            >
-                                {/* Step badge */}
-                                <div
-                                    className="relative z-10 w-12 h-12 rounded-full bg-[#3A9B9B] flex items-center justify-center text-xs font-black text-white flex-shrink-0 shadow-[0_0_20px_rgba(58,155,155,0.25)]"
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                    {/* Eligibility */}
+                    <motion.div
+                        initial={{ opacity: 0, x: -40 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.6 }}
+                        className="relative p-8 rounded-3xl border border-zinc-200 dark:border-zinc-800/80 bg-gradient-to-br from-[#3A9B9B]/5 via-white/60 to-[#2D3561]/5 dark:from-[#3A9B9B]/10 dark:via-zinc-900/80 dark:to-[#2D3561]/10 backdrop-blur-sm overflow-hidden h-full"
+                    >
+                        {/* Decorative Accent Line */}
+                        <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#2D3561] via-[#3A9B9B] to-[#2D3561] z-20" />
+                        <h3 className="relative z-10 text-2xl font-black text-zinc-900 dark:text-zinc-100 mb-8 tracking-tight">{t('eligibilityTitle')}</h3>
+                        <div className="flex flex-col gap-5">
+                            {eligibilityCriteria.map((item, i) => (
+                                <motion.div
+                                    key={i}
+                                    initial={{ opacity: 0, x: -20 }}
+                                    whileInView={{ opacity: 1, x: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ delay: i * 0.1 }}
+                                    className="flex items-center gap-5 p-5 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-100 dark:border-zinc-800 cursor-default transition-all duration-300"
                                 >
-                                    {step.step}
-                                </div>
-                                <div className="pt-1">
-                                    <div className="text-lg font-black text-zinc-900 dark:text-zinc-100 mb-1 tracking-tight">{step.label}</div>
-                                    <div className="text-zinc-500 dark:text-zinc-400 font-medium leading-relaxed">{step.desc}</div>
-                                </div>
-                            </motion.div>
-                        ))}
-                    </div>
-                </motion.div>
+                                    <div
+                                        className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
+                                        style={{ backgroundColor: `${item.color}15`, border: `1.5px solid ${item.color}30` }}
+                                    >
+                                        <item.icon className="w-6 h-6" style={{ color: item.color }} />
+                                    </div>
+                                    <span className="text-zinc-700 dark:text-zinc-200 font-semibold leading-snug">{item.text}</span>
+                                </motion.div>
+                            ))}
+                        </div>
+                    </motion.div>
+
+                    {/* Selection Process */}
+                    <motion.div
+                        initial={{ opacity: 0, x: 40 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.6, delay: 0.1 }}
+                        className="relative p-8 rounded-3xl border border-zinc-200 dark:border-zinc-800/80 bg-gradient-to-br from-[#3A9B9B]/5 via-white/60 to-[#2D3561]/5 dark:from-[#3A9B9B]/10 dark:via-zinc-900/80 dark:to-[#2D3561]/10 backdrop-blur-sm overflow-hidden h-full"
+                    >
+                        {/* Decorative Accent Line */}
+                        <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#2D3561] via-[#3A9B9B] to-[#2D3561] z-20" />
+                        <h3 className="relative z-10 text-2xl font-black text-zinc-900 dark:text-zinc-100 mb-8 tracking-tight">
+                            {t('selectionTitle')}<span className="text-[#3A9B9B]">{t('selectionHighlight')}</span>
+                        </h3>
+                        <div className="relative flex flex-col gap-0">
+                            {/* Connecting line */}
+                            <div className="absolute left-6 top-12 bottom-12 w-[2px] bg-gradient-to-b from-[#3A9B9B]/40 via-blue-500/20 to-transparent" />
+
+                            {selectionSteps.map((step, i) => (
+                                <motion.div
+                                    key={i}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ delay: 0.2 + i * 0.12 }}
+                                    className="relative flex items-start gap-6 pb-8 last:pb-0 cursor-default"
+                                >
+                                    {/* Step badge */}
+                                    <div
+                                        className="relative z-10 w-12 h-12 rounded-full bg-[#3A9B9B] flex items-center justify-center text-xs font-black text-white flex-shrink-0 shadow-[0_0_20px_rgba(58,155,155,0.25)]"
+                                    >
+                                        {step.step}
+                                    </div>
+                                    <div className="pt-1">
+                                        <div className="text-lg font-black text-zinc-900 dark:text-zinc-100 mb-1 tracking-tight">{step.label}</div>
+                                        <div className="text-zinc-500 dark:text-zinc-400 font-medium leading-relaxed">{step.desc}</div>
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </div>
+                    </motion.div>
+                </div>
             </div>
-        </div>
-    </motion.section>
-);
+        </motion.section>
+    );
+};
 
 
 
@@ -788,13 +804,15 @@ export default function OpportunitiesPage() {
 
     return (
         <PageWrapper>
-            <div className="min-h-screen bg-gradient-to-br from-[#3A9B9B]/5 via-white/60 to-[#2D3561]/5 dark:from-[#3A9B9B]/10 dark:via-zinc-950 dark:to-[#2D3561]/10 backdrop-blur-sm transition-colors grid-bg">
+            <div className="relative min-h-screen bg-gradient-to-br from-[#3A9B9B]/5 via-white/60 to-[#2D3561]/5 dark:from-[#3A9B9B]/10 dark:via-zinc-950 dark:to-[#2D3561]/10 backdrop-blur-sm transition-colors grid-bg">
+                {/* Decorative Accent Line at the top of the page */}
+                <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#2D3561] via-[#3A9B9B] to-[#2D3561] z-50" />
 
                 {/* ── Header Image ── */}
                 <header className="relative w-full pt-20">
                     <Image
                         src="/images/banavatNestTimes.jpeg"
-                        alt="BanavatNest Times — Opportunities"
+                        alt="Hero Image"
                         width={1920}
                         height={1080}
                         className="w-full h-auto block"
@@ -818,7 +836,7 @@ export default function OpportunitiesPage() {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
                     viewport={{ once: true, margin: "-50px" }}
-                    className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12"
+                    className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-4"
                 >
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
@@ -828,7 +846,7 @@ export default function OpportunitiesPage() {
                         className="text-center mb-20 max-w-3xl mx-auto"
                     >
                         <h2 className="text-5xl md:text-6xl font-black text-zinc-900 dark:text-zinc-100 tracking-tighter mb-6 leading-tight">
-                            Opportunities by <span className="text-purple-400">Level</span>
+                            {t('levelTitle')} <span className="text-[#3A9B9B]">{t('levelHighlight')}</span>
                         </h2>
                     </motion.div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10">
@@ -838,7 +856,7 @@ export default function OpportunitiesPage() {
                             Illustration={UGIllustration}
                             color="#2D3561"
                             bgClass="bg-[#EAECF5] dark:bg-[#1a1e35]"
-                            cta="Apply Now"
+                            cta={t('applyNow')}
                             href="/contact"
                             delay={0.1}
                         />
@@ -848,7 +866,7 @@ export default function OpportunitiesPage() {
                             Illustration={PGIllustration}
                             color="#3A9B9B"
                             bgClass="bg-[#E8F7F7] dark:bg-[#0d2a2a]"
-                            cta="Apply Now"
+                            cta={t('applyNow')}
                             href="/contact"
                             delay={0.2}
                         />
@@ -858,7 +876,7 @@ export default function OpportunitiesPage() {
                             Illustration={PhDIllustration}
                             color="#5BBD4A"
                             bgClass="bg-[#EAF8EA] dark:bg-[#142614]"
-                            cta="Apply Now"
+                            cta={t('applyNow')}
                             href="/contact"
                             delay={0.3}
                         />
@@ -869,4 +887,3 @@ export default function OpportunitiesPage() {
         </PageWrapper>
     );
 }
-

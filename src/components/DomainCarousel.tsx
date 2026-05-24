@@ -1,52 +1,12 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link } from '@/i18n/navigation';
 import React from 'react';
 
-// ── 3D Card Wrapper ──
-const Card3D = ({ children, className = '', style = {} }: { children: React.ReactNode, className?: string, style?: React.CSSProperties }) => {
-    const ref = useRef<HTMLDivElement>(null);
-    const mouseX = useMotionValue(0);
-    const mouseY = useMotionValue(0);
-    const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [8, -8]), { stiffness: 400, damping: 30 });
-    const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-8, 8]), { stiffness: 400, damping: 30 });
-    const glareOpacity = useSpring(0, { stiffness: 300, damping: 30 });
 
-    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-        if (!ref.current) return;
-        const rect = ref.current.getBoundingClientRect();
-        mouseX.set((e.clientX - rect.left) / rect.width - 0.5);
-        mouseY.set((e.clientY - rect.top) / rect.height - 0.5);
-        glareOpacity.set(0.18);
-    };
-    const handleMouseLeave = () => {
-        mouseX.set(0);
-        mouseY.set(0);
-        glareOpacity.set(0);
-    };
-
-    return (
-        <motion.div
-            ref={ref}
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
-            style={{ rotateX, rotateY, transformStyle: 'preserve-3d', ...style }}
-            className={`relative ${className}`}
-        >
-            {children}
-            <motion.div
-                className="absolute inset-0 pointer-events-none rounded-[2.5rem] overflow-hidden z-30"
-                style={{
-                    opacity: glareOpacity,
-                    background: `radial-gradient(circle at 50% 50%, rgba(255,255,255,0.35), transparent 65%)`,
-                }}
-            />
-        </motion.div>
-    );
-};
 
 interface DomainItem {
     title: string;
@@ -64,7 +24,7 @@ interface DomainCarouselProps {
 
 const DomainCard: React.FC<{ item: DomainItem }> = ({ item }) => {
     const CardContent = (
-        <Card3D className="w-full" style={{ perspective: '1200px' }}>
+        <div className="w-full relative">
             <div
                 className="relative w-full h-[60vh] max-h-[650px] min-h-[480px] rounded-[2.5rem] overflow-hidden group shadow-xl cursor-pointer"
             >
@@ -103,7 +63,7 @@ const DomainCard: React.FC<{ item: DomainItem }> = ({ item }) => {
                     </div>
                 </div>
             </div>
-        </Card3D>
+        </div>
     );
 
     if (item.href) {

@@ -201,7 +201,7 @@ export default function FeaturedInnovations() {
   return (
     <section
       id="featured-innovations"
-      className="py-16 bg-white dark:bg-zinc-900/30 overflow-hidden grid-bg"
+      className="pt-16 bg-white dark:bg-zinc-900 overflow-hidden grid-bg"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
@@ -220,7 +220,7 @@ export default function FeaturedInnovations() {
             </p> */}
             <h2 className="text-4xl md:text-5xl font-black text-zinc-900 dark:text-zinc-50 tracking-[-0.03em] leading-[1]">
               {t("sectionTitle")}{" "}
-              <span className="text-[#2D3561] dark:text-[#3A9B9B]">
+              <span className="text-[#3A9B9B]">
                 {t("sectionHighlight")}
               </span>
             </h2>
@@ -247,61 +247,10 @@ export default function FeaturedInnovations() {
                 )}
               </div>
 
-              {/* Two-column layout: Text on LEFT, Image on RIGHT */}
+              {/* Two-column layout: Image on LEFT, Text on RIGHT */}
               <div className="grid grid-cols-1 md:grid-cols-2 min-h-[400px] md:min-h-[440px]">
-                {/* LEFT — Post Text */}
-                <div className="order-1 relative flex flex-col justify-between p-8 md:p-10 border-b md:border-b-0 md:border-r border-zinc-200 dark:border-zinc-800 bg-gradient-to-br from-[#3A9B9B]/5 via-white/60 to-[#2D3561]/5 backdrop-blur-sm">
-                  <AnimatePresence custom={direction} mode="wait">
-                    <motion.div
-                      key={`text-${activeIndex}`}
-                      custom={direction}
-                      variants={textVariants}
-                      initial="enter"
-                      animate="center"
-                      exit="exit"
-                      transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-                      className="flex flex-col h-full"
-                    >
-                      <div className="flex items-center gap-3 mb-5">
-                        <span
-                          className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-[0.2em] px-3 py-1.5 rounded-full"
-                          style={{
-                            backgroundColor: `${item.tagColor}18`,
-                            color: item.tagColor,
-                          }}
-                        >
-                          <Tag className="w-3 h-3" />
-                          {item.tag}
-                        </span>
-                      </div>
-
-                      <h3 className="text-justify text-xl md:text-2xl font-black text-zinc-900 dark:text-zinc-50 tracking-tight leading-snug mb-4">
-                        {item.headline}
-                      </h3>
-
-                      <p className="text-sm text-justify md:text-base text-zinc-600 dark:text-zinc-400 font-medium leading-[1.7] flex-grow">
-                        {item.body}
-                      </p>
-
-                      <div className="mt-8 inline-flex items-center gap-2 self-start">
-                        <span
-                          className="flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-black uppercase tracking-[0.05em] sm:tracking-[0.1em]"
-                          style={{
-                            backgroundColor: item.tagColor,
-                            color: "#fff",
-                            boxShadow: `0 8px 24px -6px ${item.tagColor}60`,
-                          }}
-                        >
-                          <Lightbulb className="w-3.5 h-3.5 shrink-0" />
-                          <span className="text-left">{item.date}</span>
-                        </span>
-                      </div>
-                    </motion.div>
-                  </AnimatePresence>
-                </div>
-
-                {/* RIGHT — Image(s) */}
-                <div className="order-2 relative overflow-hidden min-h-[260px] md:min-h-0 bg-zinc-100 dark:bg-zinc-800">
+                {/* LEFT — Image(s) */}
+                <div className="relative overflow-hidden min-h-[260px] md:min-h-0 bg-zinc-100 dark:bg-zinc-800 border-b md:border-b-0 md:border-r border-zinc-200 dark:border-zinc-800">
                   <AnimatePresence custom={imgDir} mode="wait">
                     <motion.div
                       key={`img-${activeIndex}-${safeImgIndex}`}
@@ -342,7 +291,7 @@ export default function FeaturedInnovations() {
                     </div>
                   )}
 
-                  <div className="absolute bottom-4 left-4 flex items-center gap-2 z-10">
+                  <div className="absolute bottom-4 right-4 flex items-center gap-2 z-10">
                     {imgTotal > 1 && (
                       <>
                         <button
@@ -379,6 +328,57 @@ export default function FeaturedInnovations() {
                       <ChevronRight className="w-3.5 h-3.5 text-zinc-700 dark:text-zinc-300" />
                     </button>
                   </div>
+                </div>
+
+                {/* RIGHT — Post Text */}
+                <div className="relative flex flex-col justify-between p-8 md:p-10 bg-gradient-to-br from-[#3A9B9B]/5 via-white/60 to-[#2D3561]/5 dark:from-[#3A9B9B]/10 dark:via-zinc-900/60 dark:to-[#2D3561]/10 backdrop-blur-sm">
+                  <AnimatePresence custom={direction} mode="wait">
+                    <motion.div
+                      key={`text-${activeIndex}`}
+                      custom={direction}
+                      variants={textVariants}
+                      initial="enter"
+                      animate="center"
+                      exit="exit"
+                      transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                      className="flex flex-col h-full"
+                    >
+                      <div className="flex items-center gap-3 mb-5">
+                        <span
+                          className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-[0.2em] px-3 py-1.5 rounded-full"
+                          style={{
+                            backgroundColor: `${item.tagColor}18`,
+                            color: item.tagColor,
+                          }}
+                        >
+                          <Tag className="w-3 h-3" />
+                          {item.tag}
+                        </span>
+                      </div>
+
+                      <h3 className="text-justify text-xl md:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#2D3561] via-[#3A9B9B] to-[#2D3561] dark:from-white dark:via-[#3A9B9B] dark:to-white tracking-tight leading-snug mb-4">
+                        {item.headline}
+                      </h3>
+
+                      <p className="text-sm text-justify md:text-base text-zinc-600 dark:text-zinc-400 font-medium leading-[1.7] flex-grow">
+                        {item.body}
+                      </p>
+
+                      <div className="mt-8 inline-flex items-center gap-2 self-start">
+                        <span
+                          className="flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-black uppercase tracking-[0.05em] sm:tracking-[0.1em]"
+                          style={{
+                            backgroundColor: item.tagColor,
+                            color: "#fff",
+                            boxShadow: `0 4px 12px -3px ${item.tagColor}60`,
+                          }}
+                        >
+                          <Lightbulb className="w-3.5 h-3.5 shrink-0" />
+                          <span className="text-left">{item.date}</span>
+                        </span>
+                      </div>
+                    </motion.div>
+                  </AnimatePresence>
                 </div>
               </div>
             </div>
