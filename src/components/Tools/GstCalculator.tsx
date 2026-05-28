@@ -17,6 +17,13 @@ type ProfitCalculationResult = {
   gstCollected: number;
   profit: number;
   gstPayable: number;
+  sellAmount: number;
+  sellerPays: number;
+  customerPays: number;
+  grossProfitPercent: number;
+  effectiveProfitPercent: number;
+  derivedSell: string;
+  derivedProfitPercent: string;
 };
 
 function normalizeBaseAmount(amount: number, rate: number, taxType: TaxType) {
@@ -51,8 +58,33 @@ export default function GstCalculator() {
   const [costType, setCostType] = useState<TaxType>("exclusive");
 
   const [sell, setSell] = useState<string>("");
+  const [profitPercentage, setProfitPercentage] = useState<string>("0.00");
   const [sellGst, setSellGst] = useState<number>(18);
   const [sellType, setSellType] = useState<TaxType>("exclusive");
+
+  const [lastEdited, setLastEdited] = useState<"sell" | "profit">("profit");
+
+  const handleCostGstChange = (rate: number) => {
+    setCostGst(rate);
+    setSellGst(rate);
+    setLastEdited("sell");
+  };
+
+  const handleSellGstChange = (rate: number) => {
+    setSellGst(rate);
+    setLastEdited("sell");
+  };
+
+  const handleCostTypeChange = (type: TaxType) => {
+    setCostType(type);
+    setSellType(type);
+    setLastEdited("sell");
+  };
+
+  const handleSellTypeChange = (type: TaxType) => {
+    setSellType(type);
+    setLastEdited("sell");
+  };
 
 
   // =========================
@@ -99,9 +131,7 @@ export default function GstCalculator() {
   // =========================
   const profitResult: ProfitCalculationResult = useMemo(() => {
     const numericCost = Number(cost);
-    const numericSell = Number(sell);
 
-    // Cost is required
     if (!cost || isNaN(numericCost)) {
       return {
         actualCost: 0,
@@ -110,6 +140,13 @@ export default function GstCalculator() {
         gstCollected: 0,
         profit: 0,
         gstPayable: 0,
+        sellAmount: 0,
+        sellerPays: 0,
+        customerPays: 0,
+        grossProfitPercent: 0,
+        effectiveProfitPercent: 0,
+        derivedSell: "",
+        derivedProfitPercent: "",
       };
     }
 
@@ -125,34 +162,45 @@ export default function GstCalculator() {
         ? numericCost - actualCost
         : calculateTaxAmount(numericCost, costGst);
 
-    // SELL (optional)
-    const hasSell =
-      sell !== "" &&
-      !isNaN(numericSell);
+    const sellerPays = actualCost + gstPaid;
 
-    const actualSell = hasSell
-      ? normalizeBaseAmount(
-        numericSell,
-        sellGst,
-        sellType
-      )
-      : 0;
+    let actualSell = 0;
+    let gstCollected = 0;
+    let sellAmount = 0;
+    let derivedSell = "";
+    let derivedProfitPercent = "";
 
-    const gstCollected = hasSell
-      ? (
-        sellType === "inclusive"
-          ? numericSell - actualSell
-          : calculateTaxAmount(numericSell, sellGst)
-      )
-      : 0;
+    if (lastEdited === "profit") {
+      const p = parseFloat(profitPercentage) || 0;
+      const profitVal = (actualCost * p) / 100;
+      actualSell = actualCost + profitVal;
+      gstCollected = calculateTaxAmount(actualSell, sellGst);
+      const totalCustomerPays = actualSell + gstCollected;
+      sellAmount = sellType === "inclusive" ? totalCustomerPays : actualSell;
+      derivedSell = sellAmount > 0 ? sellAmount.toFixed(2) : "";
+      derivedProfitPercent = profitPercentage;
+    } else {
+      // lastEdited === "sell"
+      sellAmount = Number(sell) || 0;
+      actualSell = normalizeBaseAmount(sellAmount, sellGst, sellType);
+      gstCollected = sellType === "inclusive" ? sellAmount - actualSell : calculateTaxAmount(sellAmount, sellGst);
+      const profitVal = actualSell - actualCost;
+      const p = actualCost > 0 ? (profitVal / actualCost) * 100 : 0;
+      derivedSell = sell;
+      derivedProfitPercent = p.toFixed(2);
+    }
 
-    const profit = hasSell
-      ? actualSell - actualCost
-      : 0;
+    const customerPays = actualSell + gstCollected;
+    const profit = actualSell - actualCost;
+    const gstPayable = gstCollected - gstPaid;
 
-    const gstPayable = hasSell
-      ? gstCollected - gstPaid
-      : 0;
+    // Gross Profit % = (baseSell - baseBuy) / baseBuy
+    const grossProfitPercent = actualCost > 0 ? (profit / actualCost) * 100 : 0;
+
+    // Effective Profit = customerPays - sellerPays - gstPayable
+    const effectiveProfit = customerPays - sellerPays - gstPayable;
+    // Effective Profit % = (effectiveProfit / sellerPays) * 100
+    const effectiveProfitPercent = sellerPays > 0 ? (effectiveProfit / sellerPays) * 100 : 0;
 
     return {
       actualCost,
@@ -161,87 +209,37 @@ export default function GstCalculator() {
       gstCollected,
       profit,
       gstPayable,
+      sellAmount,
+      sellerPays,
+      customerPays,
+      grossProfitPercent,
+      effectiveProfitPercent,
+      derivedSell,
+      derivedProfitPercent,
     };
   }, [
     cost,
     costGst,
     costType,
     sell,
+    profitPercentage,
     sellGst,
     sellType,
+    lastEdited,
   ]);
 
-  // =========================
-  // PROFIT PLANNER STATE & LOGIC
-  // =========================
-  const [targetProfitPercent, setTargetProfitPercent] = useState<string>("");
-  const [targetProfitAmount, setTargetProfitAmount] = useState<string>("");
-
-  const handleTargetPercentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value;
-    setTargetProfitPercent(val);
-    const p = Number(val);
-    if (!val || isNaN(p) || profitResult.actualCost <= 0) {
-      setTargetProfitAmount("");
-      return;
-    }
-    const amt = (profitResult.actualCost * p) / 100;
-    setTargetProfitAmount(amt.toFixed(2));
-
-    // Drive the main calculator by updating the sell state
-    const baseTargetSell = profitResult.actualCost + amt;
-    const finalSell = sellType === "inclusive"
-      ? baseTargetSell * (1 + sellGst / 100)
-      : baseTargetSell;
-    setSell(finalSell.toFixed(2));
-  };
-
-  const handleTargetAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value;
-    setTargetProfitAmount(val);
-    const amt = Number(val);
-    if (!val || isNaN(amt) || profitResult.actualCost <= 0) {
-      setTargetProfitPercent("");
-      return;
-    }
-    const p = (amt / profitResult.actualCost) * 100;
-    setTargetProfitPercent(p.toFixed(2));
-
-    // Drive the main calculator by updating the sell state
-    const baseTargetSell = profitResult.actualCost + amt;
-    const finalSell = sellType === "inclusive"
-      ? baseTargetSell * (1 + sellGst / 100)
-      : baseTargetSell;
-    setSell(finalSell.toFixed(2));
-  };
-
-  const recommendedSellPrice = useMemo(() => {
-    if (!targetProfitAmount || isNaN(Number(targetProfitAmount))) return 0;
-    const baseTargetSell = profitResult.actualCost + Number(targetProfitAmount);
-    return sellType === "inclusive"
-      ? baseTargetSell * (1 + sellGst / 100)
-      : baseTargetSell;
-  }, [profitResult.actualCost, targetProfitAmount, sellType, sellGst]);
-
-  // Synchronize Profit Planner inputs with the actual calculator results in real time
+  // Synchronize inputs dynamically depending on active source
   useEffect(() => {
-    if (profitResult.actualCost > 0) {
-      const p = (profitResult.profit / profitResult.actualCost) * 100;
-      const amt = profitResult.profit;
-
-      // Only sync if the current planner state is significantly different from actual results.
-      // This prevents the sync logic from "fighting" the user's manual typing in the planner fields.
-      if (Math.abs(Number(targetProfitPercent) - p) > 0.01) {
-        setTargetProfitPercent(p.toFixed(2));
-      }
-      if (Math.abs(Number(targetProfitAmount) - amt) > 0.01) {
-        setTargetProfitAmount(amt.toFixed(2));
-      }
+    if (lastEdited === "profit") {
+      setSell(profitResult.derivedSell);
     } else {
-      setTargetProfitPercent("");
-      setTargetProfitAmount("");
+      setProfitPercentage(profitResult.derivedProfitPercent);
     }
-  }, [profitResult.profit, profitResult.actualCost, targetProfitPercent, targetProfitAmount]);
+  }, [
+    profitResult.derivedSell,
+    profitResult.derivedProfitPercent,
+    lastEdited,
+  ]);
 
 
   return (
@@ -251,86 +249,151 @@ export default function GstCalculator() {
           {/* ========================= GST CALCULATOR ========================= */}
           <section className="relative overflow-hidden rounded-[1.5rem] sm:rounded-[2.5rem] border-2 border-[#3A9B9B]/20 bg-gradient-to-br from-[#3A9B9B]/5 via-white/60 to-[#2D3561]/5 dark:from-[#3A9B9B]/10 dark:via-zinc-900/60 dark:to-[#2D3561]/10 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300">
             <div className="absolute top-0 left-0 right-0 h-1.5 sm:h-2 bg-gradient-to-r from-[#2D3561] via-[#3A9B9B] to-[#2D3561] rounded-t-3xl" />
-            <div className="border-b border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/30 px-4 py-2 sm:px-10 sm:py-4">
-              <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-center items-center">
-                <h1 className="text-2xl sm:text-4xl font-black text-zinc-900 dark:text-zinc-100 tracking-tighter leading-tight">
+            <div className="border-b border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/30 backdrop-blur-sm px-4 py-1.5 sm:px-10 sm:py-3">
+              <div className="flex flex-col gap-0.5 sm:flex-row sm:items-center sm:justify-center items-center">
+                <h1 className="text-2xl sm:text-3xl font-black text-zinc-900 dark:text-zinc-100 tracking-tighter leading-tight">
                   GST <span className="text-[#3A9B9B]">Calculator</span>
                 </h1>
               </div>
             </div>
 
-            <div className="p-3 pt-2 sm:p-10 sm:pt-4">
-              <div className="grid grid-cols-2 gap-2 sm:gap-4 md:grid-cols-3">
-                <div className="space-y-1 col-span-2 md:col-span-1">
-                  <label className="text-[10px] sm:text-xs font-bold text-zinc-900 dark:text-zinc-100 px-1">
-                    Amount
-                  </label>
-                  <input
-                    type="number"
-                    className="w-full rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm text-zinc-900 dark:text-zinc-100 outline-none transition focus:border-[#3A9B9B] focus:ring-2 focus:ring-[#3A9B9B]/20"
-                    placeholder="Enter amount"
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
-                    onWheel={preventNumberScroll}
-                  />
+            <div className="p-3 pt-2 sm:p-6 lg:p-8">
+              <div className="grid gap-2 sm:gap-4 md:gap-6">
+                {/* INPUT ROW */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-2 sm:gap-3 items-stretch">
+                  {/* Amount Input Card */}
+                  <div className="flex h-[60px] items-stretch rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 focus-within:border-[#3A9B9B] focus-within:ring-2 focus-within:ring-[#3A9B9B]/20 transition-all duration-300 overflow-hidden group">
+                    <div className="flex items-center justify-center w-[60px] shrink-0 bg-[#3A9B9B]/8 text-[#3A9B9B] font-bold text-[10px] uppercase border-r border-zinc-100 dark:border-zinc-800/50 transition-colors group-focus-within:bg-[#3A9B9B]/12">
+                      Amount
+                    </div>
+                    <div className="flex-1 px-3 flex flex-col justify-center">
+                      <label className="block text-[8px] font-bold uppercase tracking-widest text-zinc-400 dark:text-zinc-500 mb-0.5">
+                        
+                      </label>
+                      <input
+                        type="number"
+                        placeholder="0.00"
+                        className="w-full bg-transparent text-sm font-bold text-zinc-900 dark:text-zinc-100 outline-none placeholder:text-zinc-300 dark:placeholder:text-zinc-700 leading-none"
+                        value={amount}
+                        onChange={(e) => setAmount(e.target.value)}
+                        onWheel={preventNumberScroll}
+                      />
+                    </div>
+                  </div>
+
+                  {/* GST % Selection Card */}
+                  <div className="flex h-[60px] items-stretch rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 transition-all duration-300 overflow-hidden">
+                    <div className="flex items-center justify-center w-[60px] shrink-0 border-r border-zinc-200 dark:border-zinc-800 bg-zinc-100/50 dark:bg-zinc-900/50">
+                      <span className="text-[10px] font-bold text-zinc-600 dark:text-zinc-400 uppercase tracking-wider">
+                        GST%
+                      </span>
+                    </div>
+                    <div className="flex-1 flex items-center justify-around px-2">
+                      {[0, 5, 18, 40].map((rate) => (
+                        <label key={`gst-rate-${rate}`} className="cursor-pointer flex flex-col items-center gap-1 group">
+                          <span className="text-[9px] font-bold text-zinc-500 dark:text-zinc-400 group-hover:text-[#3A9B9B] transition-colors leading-none">
+                            {rate}%
+                          </span>
+                          <div className="relative flex items-center justify-center w-3.5 h-3.5 rounded-full border-2 border-zinc-300 dark:border-zinc-700 group-hover:border-[#3A9B9B] transition-colors">
+                            <input
+                              type="radio"
+                              name="gst-rate"
+                              value={rate}
+                              checked={gst === rate}
+                              onChange={() => setGst(rate)}
+                              className="peer sr-only"
+                            />
+                            <div className="w-1.5 h-1.5 rounded-full bg-[#3A9B9B] opacity-0 peer-checked:opacity-100 transition-opacity" />
+                          </div>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Tax Type Selection Card */}
+                  <div className="flex h-[60px] items-stretch rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 transition-all duration-300 overflow-hidden">
+                    <div className="flex items-center justify-center w-[60px] shrink-0 border-r border-zinc-200 dark:border-zinc-800 bg-zinc-100/50 dark:bg-zinc-900/50">
+                      <span className="text-[10px] font-bold text-center leading-tight text-zinc-600 dark:text-zinc-400 uppercase tracking-wider">
+                        GST Type
+                      </span>
+                    </div>
+                    <div className="flex-1 flex items-center justify-around px-4">
+                      {[
+                        { label: "Exclusive / Extra", value: "exclusive" },
+                        { label: "Inclusive / Included", value: "inclusive" }
+                      ].map((t) => (
+                        <label key={`gst-type-${t.value}`} className="cursor-pointer flex flex-col items-center gap-1 group">
+                          <span className="text-[9px] font-bold text-zinc-500 dark:text-zinc-400 group-hover:text-[#3A9B9B] transition-colors leading-none">
+                            {t.label}
+                          </span>
+                          <div className="relative flex items-center justify-center w-3.5 h-3.5 rounded-full border-2 border-zinc-300 dark:border-zinc-700 group-hover:border-[#3A9B9B] transition-colors">
+                            <input
+                              type="radio"
+                              name="gst-type"
+                              value={t.value}
+                              checked={type === t.value}
+                              onChange={() => setType(t.value as TaxType)}
+                              className="peer sr-only"
+                            />
+                            <div className="w-1.5 h-1.5 rounded-full bg-[#3A9B9B] opacity-0 peer-checked:opacity-100 transition-opacity" />
+                          </div>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
                 </div>
 
-                <div className="space-y-1 col-span-1">
-                  <label className="text-[10px] sm:text-xs font-bold text-zinc-900 dark:text-zinc-100 px-1">
-                    GST %
-                  </label>
-                  <select
-                    className="w-full rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm text-zinc-900 dark:text-zinc-100 outline-none transition focus:border-[#3A9B9B] focus:ring-2 focus:ring-[#3A9B9B]/20"
-                    value={gst}
-                    onChange={(e) => setGst(Number(e.target.value))}
-                  >
-                    {[0, 5, 12, 18, 28].map((g) => (
-                      <option key={g} value={g}>
-                        {g}%
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                {/* RESULTS GRID */}
+                <div className="grid grid-cols-3 auto-rows-fr gap-2 sm:gap-3">
+                  {/* Actual Amount Card */}
+                  <div className="relative overflow-hidden rounded-xl border-2 border-[#3A9B9B]/20 bg-gradient-to-br from-[#3A9B9B]/5 via-white/60 to-[#2D3561]/5 dark:from-[#3A9B9B]/10 dark:via-zinc-900/60 dark:to-[#2D3561]/10 backdrop-blur-sm p-2 sm:p-3 text-center hover:shadow-md transition-all duration-300 min-h-[80px] sm:min-h-[100px] flex flex-col justify-center items-center h-full w-full">
+                    <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#2D3561] via-[#3A9B9B] to-[#2D3561]" />
+                    <div className="flex flex-col justify-center items-center h-full">
+                      <div className="h-[28px] sm:h-[32px] flex items-center justify-center text-center max-w-[100px]">
+                        <p className="text-[8px] sm:text-[10px] text-zinc-500 dark:text-zinc-400 font-black uppercase tracking-widest leading-tight">
+                          Amount
+                        </p>
+                      </div>
+                      <div className="mt-1 min-h-[24px] flex items-center justify-center">
+                        <p className="text-sm sm:text-xl font-black tracking-tight text-zinc-900 dark:text-zinc-100 whitespace-nowrap">
+                          ₹{gstResult.actual.toFixed(2)}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
 
-                <div className="space-y-1 col-span-1">
-                  <label className="text-[10px] sm:text-xs font-bold text-zinc-900 dark:text-zinc-100 px-1">
-                    Tax Type
-                  </label>
-                  <select
-                    className="w-full rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm text-zinc-900 dark:text-zinc-100 outline-none transition focus:border-[#3A9B9B] focus:ring-2 focus:ring-[#3A9B9B]/20"
-                    value={type}
-                    onChange={(e) => { setType(e.target.value as TaxType); }}
-                  >
-                    <option value="exclusive">Exclusive</option>
-                    <option value="inclusive">Inclusive</option>
-                  </select>
-                </div>
-              </div>
+                  {/* GST Amount Card */}
+                  <div className="relative overflow-hidden rounded-xl border-2 border-[#3A9B9B]/20 bg-gradient-to-br from-[#3A9B9B]/5 via-white/60 to-[#2D3561]/5 dark:from-[#3A9B9B]/10 dark:via-zinc-900/60 dark:to-[#2D3561]/10 backdrop-blur-sm p-2 sm:p-3 text-center hover:shadow-md transition-all duration-300 min-h-[80px] sm:min-h-[100px] flex flex-col justify-center items-center h-full w-full">
+                    <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#2D3561] via-[#3A9B9B] to-[#2D3561]" />
+                    <div className="flex flex-col justify-center items-center h-full">
+                      <div className="h-[28px] sm:h-[32px] flex items-center justify-center text-center max-w-[100px]">
+                        <p className="text-[8px] sm:text-[10px] text-[#3A9B9B] font-black uppercase tracking-widest leading-tight">
+                          GST Amount
+                        </p>
+                      </div>
+                      <div className="mt-1 min-h-[24px] flex items-center justify-center">
+                        <p className="text-sm sm:text-xl font-black tracking-tight text-[#3A9B9B] whitespace-nowrap">
+                          ₹{gstResult.gstAmount.toFixed(2)}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
 
-              <div className="mt-3 grid gap-2 sm:grid-cols-3">
-                <div className="relative overflow-hidden rounded-xl border-2 border-[#3A9B9B]/20 bg-gradient-to-br from-[#3A9B9B]/5 via-white/60 to-[#2D3561]/5 dark:from-[#3A9B9B]/10 dark:via-zinc-900/60 dark:to-[#2D3561]/10 backdrop-blur-sm p-2 sm:p-4 text-center hover:shadow-md transition-all duration-300">
-                  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#2D3561] via-[#3A9B9B] to-[#2D3561]" />
-                  <p className="text-[9px] sm:text-xs text-zinc-500 dark:text-zinc-400">
-                    Actual Amount
-                  </p>
-                  <p className="mt-0.5 text-xs sm:text-base font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
-                    ₹{gstResult.actual.toFixed(2)}
-                  </p>
-                </div>
-
-                <div className="relative overflow-hidden rounded-xl border-2 border-[#3A9B9B]/20 bg-gradient-to-br from-[#3A9B9B]/5 via-white/60 to-[#2D3561]/5 dark:from-[#3A9B9B]/10 dark:via-zinc-900/60 dark:to-[#2D3561]/10 backdrop-blur-sm p-2 sm:p-4 text-center hover:shadow-md transition-all duration-300">
-                  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#2D3561] via-[#3A9B9B] to-[#2D3561]" />
-                  <p className="text-[9px] sm:text-xs text-[#3A9B9B]">GST Amount</p>
-                  <p className="mt-0.5 text-xs sm:text-base font-bold tracking-tight text-[#3A9B9B]">
-                    ₹{gstResult.gstAmount.toFixed(2)}
-                  </p>
-                </div>
-
-                <div className="relative overflow-hidden rounded-xl border-none bg-gradient-to-r from-[#2D3561] to-[#3A9B9B] p-2 sm:p-4 text-center shadow-lg shadow-[#3A9B9B]/20">
-                  <p className="text-[9px] sm:text-xs text-teal-50 font-bold">Total Amount</p>
-                  <p className="mt-0.5 text-sm sm:text-xl font-black tracking-tighter text-white">
-                    ₹{gstResult.total.toFixed(2)}
-                  </p>
+                  {/* Total Amount Card */}
+                  <div className="relative overflow-hidden rounded-xl border-none bg-gradient-to-r from-[#2D3561] to-[#3A9B9B] p-2 sm:p-3 text-center shadow-lg shadow-[#3A9B9B]/20 min-h-[80px] sm:min-h-[100px] flex flex-col justify-center items-center h-full w-full">
+                    <div className="flex flex-col justify-center items-center h-full">
+                      <div className="h-[28px] sm:h-[32px] flex items-center justify-center text-center max-w-[100px]">
+                        <p className="text-[8px] sm:text-[10px] text-teal-50 font-black uppercase tracking-widest leading-tight">
+                          Total Amount
+                        </p>
+                      </div>
+                      <div className="mt-1 min-h-[24px] flex items-center justify-center">
+                        <p className="text-sm sm:text-xl font-black tracking-tighter text-white whitespace-nowrap">
+                          ₹{gstResult.total.toFixed(2)}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -388,7 +451,7 @@ export default function GstCalculator() {
                               name="buy-gst"
                               value={rate}
                               checked={costGst === rate}
-                              onChange={() => setCostGst(rate)}
+                              onChange={() => handleCostGstChange(rate)}
                               className="peer sr-only"
                             />
                             <div className="w-1.5 h-1.5 rounded-full bg-[#3A9B9B] opacity-0 peer-checked:opacity-100 transition-opacity" />
@@ -401,13 +464,13 @@ export default function GstCalculator() {
                   <div className="flex h-[60px] items-stretch rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 transition-all duration-300 overflow-hidden">
                     <div className="flex items-center justify-center w-[60px] shrink-0 border-r border-zinc-200 dark:border-zinc-800 bg-zinc-100/50 dark:bg-zinc-900/50">
                       <span className="text-[10px] font-bold text-center leading-tight text-zinc-600 dark:text-zinc-400 uppercase tracking-wider">
-                        Type
+                        GST Type
                       </span>
                     </div>
                     <div className="flex-1 flex items-center justify-around px-4">
                       {[
-                        { label: "Extra", value: "exclusive" },
-                        { label: "Incl.", value: "inclusive" }
+                        { label: "Exclusive / Extra", value: "exclusive" },
+                        { label: "Inclusive / Included", value: "inclusive" }
                       ].map((t) => (
                         <label key={`buy-type-${t.value}`} className="cursor-pointer flex flex-col items-center gap-1 group">
                           <span className="text-[9px] font-bold text-zinc-500 dark:text-zinc-400 group-hover:text-[#3A9B9B] transition-colors leading-none">
@@ -419,7 +482,7 @@ export default function GstCalculator() {
                               name="buy-type"
                               value={t.value}
                               checked={costType === t.value}
-                              onChange={() => setCostType(t.value as TaxType)}
+                              onChange={() => handleCostTypeChange(t.value as TaxType)}
                               className="peer sr-only"
                             />
                             <div className="w-1.5 h-1.5 rounded-full bg-[#3A9B9B] opacity-0 peer-checked:opacity-100 transition-opacity" />
@@ -447,7 +510,7 @@ export default function GstCalculator() {
                         placeholder="0.00"
                         className="w-full bg-transparent text-sm font-bold text-zinc-900 dark:text-zinc-100 outline-none placeholder:text-zinc-300 dark:placeholder:text-zinc-700 leading-none"
                         value={sell}
-                        onChange={(e) => setSell(e.target.value)}
+                        onChange={(e) => { setSell(e.target.value); setLastEdited("sell"); }}
                         onWheel={preventNumberScroll}
                       />
                     </div>
@@ -471,7 +534,7 @@ export default function GstCalculator() {
                               name="sell-gst"
                               value={rate}
                               checked={sellGst === rate}
-                              onChange={() => setSellGst(rate)}
+                              onChange={() => handleSellGstChange(rate)}
                               className="peer sr-only"
                             />
                             <div className="w-1.5 h-1.5 rounded-full bg-[#3A9B9B] opacity-0 peer-checked:opacity-100 transition-opacity" />
@@ -484,13 +547,13 @@ export default function GstCalculator() {
                   <div className="flex h-[60px] items-stretch rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 transition-all duration-300 overflow-hidden">
                     <div className="flex items-center justify-center w-[60px] shrink-0 border-r border-zinc-200 dark:border-zinc-800 bg-zinc-100/50 dark:bg-zinc-900/50">
                       <span className="text-[10px] font-bold text-center leading-tight text-zinc-600 dark:text-zinc-400 uppercase tracking-wider">
-                        Type
+                        GST Type
                       </span>
                     </div>
                     <div className="flex-1 flex items-center justify-around px-4">
                       {[
-                        { label: "Extra", value: "exclusive" },
-                        { label: "Incl.", value: "inclusive" }
+                        { label: "Exclusive / Extra", value: "exclusive" },
+                        { label: "Inclusive / Included", value: "inclusive" }
                       ].map((t) => (
                         <label key={`sell-type-${t.value}`} className="cursor-pointer flex flex-col items-center gap-1 group">
                           <span className="text-[9px] font-bold text-zinc-500 dark:text-zinc-400 group-hover:text-[#3A9B9B] transition-colors leading-none">
@@ -502,7 +565,7 @@ export default function GstCalculator() {
                               name="sell-type"
                               value={t.value}
                               checked={sellType === t.value}
-                              onChange={() => setSellType(t.value as TaxType)}
+                              onChange={() => handleSellTypeChange(t.value as TaxType)}
                               className="peer sr-only"
                             />
                             <div className="w-1.5 h-1.5 rounded-full bg-[#3A9B9B] opacity-0 peer-checked:opacity-100 transition-opacity" />
@@ -619,7 +682,7 @@ export default function GstCalculator() {
                   {/* SUMMARY ROW */}
                   <div className="grid grid-cols-1 md:grid-cols-3 auto-rows-fr gap-2 sm:gap-3">
                     {/* Profit % Input Card */}
-                    <div className={`relative overflow-hidden rounded-xl border-2 border-[#3A9B9B]/20 bg-gradient-to-br from-[#3A9B9B]/5 via-white/60 to-[#2D3561]/5 dark:from-[#3A9B9B]/10 dark:via-zinc-900/60 dark:to-[#2D3561]/10 backdrop-blur-sm p-2 sm:p-3 text-center hover:shadow-md transition-all duration-300 min-h-[90px] flex flex-col justify-center items-center h-full w-full focus-within:border-[#3A9B9B] focus-within:ring-2 focus-within:ring-[#3A9B9B]/20 ${profitResult.actualCost <= 0 ? 'opacity-50 pointer-events-none' : ''}`}>
+                    <div className={`relative overflow-hidden rounded-xl border-2 border-[#3A9B9B]/40 bg-gradient-to-br from-[#3A9B9B]/10 via-white/70 to-[#2D3561]/10 dark:from-[#3A9B9B]/20 dark:via-zinc-900/70 dark:to-[#2D3561]/20 backdrop-blur-sm p-2 sm:p-3 text-center hover:shadow-md transition-all duration-300 min-h-[90px] flex flex-col justify-center items-center h-full w-full focus-within:border-[#3A9B9B] focus-within:ring-2 focus-within:ring-[#3A9B9B]/20 ${profitResult.actualCost <= 0 ? 'opacity-50 pointer-events-none' : ''}`}>
                       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#2D3561] via-[#3A9B9B] to-[#2D3561]" />
                       <div className="flex flex-col justify-center items-center h-full w-full">
                         <div className="h-[28px] sm:h-[32px] flex items-center justify-center text-center max-w-[100px]">
@@ -629,11 +692,11 @@ export default function GstCalculator() {
                         </div>
                         <div className="mt-1 min-h-[24px] flex items-center justify-center">
                           <input
-                            type="string"
+                            type="text"
                             placeholder="0.00"
                             className="w-12 sm:w-20 bg-transparent text-sm sm:text-xl font-black tracking-tight text-[#3A9B9B] outline-none text-right placeholder:text-[#3A9B9B]/40"
-                            value={targetProfitPercent}
-                            onChange={handleTargetPercentChange}
+                            value={profitPercentage}
+                            onChange={(e) => { setProfitPercentage(e.target.value); setLastEdited("profit"); }}
                             disabled={profitResult.actualCost <= 0}
                             onWheel={preventNumberScroll}
                           />
@@ -716,7 +779,7 @@ export default function GstCalculator() {
                   <h3 className="text-base font-bold text-zinc-900 dark:text-zinc-100">Select GST %</h3>
                 </div>
                 <p className="mt-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
-                  Choose the correct slab (5%, 12%, 18%, or 28%) for your product category.
+                  Choose the correct slab (0%, 5%, 18%, or 40%) for your product category.
                 </p>
               </div>
 
@@ -724,10 +787,10 @@ export default function GstCalculator() {
                 <div className="absolute top-0 left-0 right-0 h-1 bg-zinc-200 dark:bg-zinc-800 transition-colors group-hover:bg-[#3A9B9B]" />
                 <div className="flex items-center gap-3">
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#3A9B9B]/10 text-sm font-bold text-[#3A9B9B]">3</div>
-                  <h3 className="text-base font-bold text-zinc-900 dark:text-zinc-100">Tax Type</h3>
+                  <h3 className="text-base font-bold text-zinc-900 dark:text-zinc-100">GST Type</h3>
                 </div>
                 <p className="mt-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
-                  Select <strong className="text-zinc-800 dark:text-zinc-200">Inclusive</strong> if price has tax, or <strong className="text-zinc-800 dark:text-zinc-200">Exclusive</strong> if tax is extra.
+                  Select <strong className="text-zinc-800 dark:text-zinc-200">Inclusive / Included</strong> if price has tax, or <strong className="text-zinc-800 dark:text-zinc-200">Exclusive / Extra</strong> if tax is extra.
                 </p>
               </div>
 
