@@ -1,10 +1,8 @@
-'use client';
-
-import { motion } from 'framer-motion';
-import { CircleDot, ArrowRight, Beaker, Cpu, Trophy, Network, GraduationCap, Star, Zap } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { ArrowRight, Beaker, Cpu, Trophy, Network, GraduationCap, Star, CircleDot } from 'lucide-react';
+import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import PageWrapper from '@/components/PageWrapper';
+import BoardPageClient from './BoardPageClient';
 
 function SparklesIcon({ className = '' }) {
     return (
@@ -27,10 +25,25 @@ function ArrowUpRightIcon({ className = '' }) {
     );
 }
 
-export default function BoardPage() {
-    const t = useTranslations('aboutBoard');
-    const tBoard = useTranslations('boardPage');
+export default async function BoardPage() {
+    const t = await getTranslations('aboutBoard');
+    const tBoard = await getTranslations('boardPage');
 
+    // Fetch CMS-managed published directors
+    let cmsDirectors: Array<{
+        id: string; username: string; fullName: string;
+        role: string; image: string | null; bio: string;
+    }> = [];
+    try {
+        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+        const res = await fetch(`${baseUrl}/api/cms/public`, { next: { revalidate: 60 } });
+        if (res.ok) {
+            const data = await res.json();
+            cmsDirectors = data.directors || [];
+        }
+    } catch {
+        // Silently fail — board page still works with static founders
+    }
 
     return (
         <PageWrapper>
@@ -40,21 +53,13 @@ export default function BoardPage() {
                 <section className="relative pt-24 overflow-hidden grid-bg min-h-[90vh] flex items-center">
                     <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="text-center mb-14">
-                            <motion.h2
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.6, delay: 0.1 }}
+                            <h2
                                 className="text-3xl md:text-5xl lg:text-6xl font-bold text-zinc-900 dark:text-zinc-100 mb-4"
                             >
                                 {tBoard('heroTitle')} <span className="text-[#3A9B9B]">{tBoard('heroHighlight')}</span>
-                            </motion.h2>
+                            </h2>
                         </div>
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.7 }}
+                        <div
                             className="relative rounded-[2.5rem] border border-white/40 dark:border-white/10 overflow-hidden shadow-[0_20px_60px_rgba(15,23,42,0.1)] backdrop-blur-sm bg-gradient-to-br from-[#3A9B9B]/5 via-white/60 to-[#2D3561]/5 dark:from-[#3A9B9B]/10 dark:via-zinc-900/80 dark:to-[#2D3561]/10">
                             {/* Main Grid */}
                             <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr]">
@@ -144,10 +149,8 @@ export default function BoardPage() {
 
                                 {/* RIGHT SIDE */}
                                 <div className="relative p-6 md:p-10 lg:p-12">
-                                    <motion.div
-                                        whileHover={{ y: -5 }}
-                                        transition={{ duration: 0.3 }}
-                                        className="h-full rounded-[2rem] bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl border border-white/60 dark:border-white/10 shadow-[0_12px_40px_rgba(15,23,42,0.06)] p-6 md:p-8 ">
+                                    <div
+                                        className="h-full rounded-[2rem] bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl border border-white/60 dark:border-white/10 shadow-[0_12px_40px_rgba(15,23,42,0.06)] p-6 md:p-8 hover:-translate-y-1 transition-transform duration-300 ">
                                         {/* Top */}
                                         <div className="flex items-center gap-4 mb-6">
                                             <div className="h-14 w-14 rounded-2xl bg-[#E8F7F7] flex items-center justify-center border border-[#3A9B9B]/10">
@@ -227,10 +230,10 @@ export default function BoardPage() {
                                                 </div>
                                             ))}
                                         </div>
-                                    </motion.div>
+                                    </div>
                                 </div>
                             </div>
-                        </motion.div>
+                        </div>
                     </div>
                 </section>
 
@@ -240,28 +243,18 @@ export default function BoardPage() {
 
                         {/* Section heading */}
                         <div className="text-center mb-14">
-                            <motion.h2
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.6, delay: 0.1 }}
+                            <h2
                                 className="text-3xl md:text-5xl lg:text-6xl font-bold text-zinc-900 dark:text-zinc-100 mb-4"
                             >
                                 {tBoard('boardTitle')} <span className="text-[#3A9B9B]">{tBoard('boardHighlight')}</span>
-                            </motion.h2>
+                            </h2>
                         </div>
 
                         {/* Director cards */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
 
                             {/* Dr. Sukhdev Singh */}
-                            <motion.div
-                                initial={{ opacity: 0, y: 24 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.6 }}
-                                whileHover={{ y: -10 }}
-                                className="bg-white dark:bg-zinc-900/50 rounded-[4rem] p-10 md:p-12 border border-zinc-100 dark:border-zinc-800 relative text-left transition-all duration-300 shadow-xl hover:shadow-2xl dark:hover:shadow-[0_0_40px_rgba(58,155,155,0.15)] dark:hover:border-teal-500/30"
+                            <div className="bg-white dark:bg-zinc-900/50 rounded-[4rem] p-10 md:p-12 border border-zinc-100 dark:border-zinc-800 relative text-left transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-2 dark:hover:shadow-[0_0_40px_rgba(58,155,155,0.15)] dark:hover:border-teal-500/30"
                             >
                                 <div className="flex flex-col md:flex-row items-center md:items-center gap-8 mb-10 text-center md:text-left">
                                     <div className="w-40 h-40 md:w-48 md:h-48 rounded-3xl overflow-hidden shadow-lg border-4 border-white dark:border-zinc-800 shrink-0">
@@ -283,16 +276,10 @@ export default function BoardPage() {
                                     className="inline-flex items-center gap-2 text-[#3A9B9B] font-bold text-lg hover:text-[#2a7676] transition-colors group">
                                     {tBoard('viewPortfolio')} <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                                 </Link>
-                            </motion.div>
+                            </div>
 
                             {/* Dr. Sangita Roy */}
-                            <motion.div
-                                initial={{ opacity: 0, y: 24 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.6, delay: 0.1 }}
-                                whileHover={{ y: -10 }}
-                                className="bg-white dark:bg-zinc-900/50 rounded-[4rem] p-10 md:p-12 border border-zinc-100 dark:border-zinc-800 relative text-left transition-all duration-300 shadow-xl hover:shadow-2xl dark:hover:shadow-[0_0_40px_rgba(58,155,155,0.15)] dark:hover:border-teal-500/30 overflow-hidden"
+                            <div className="bg-white dark:bg-zinc-900/50 rounded-[4rem] p-10 md:p-12 border border-zinc-100 dark:border-zinc-800 relative text-left transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-2 dark:hover:shadow-[0_0_40px_rgba(58,155,155,0.15)] dark:hover:border-teal-500/30 overflow-hidden"
                             >
                                 <div className="flex flex-col md:flex-row items-center md:items-center gap-8 mb-10 text-center md:text-left">
                                     <div className="w-40 h-40 md:w-48 md:h-48 rounded-3xl overflow-hidden shadow-lg border-4 border-white dark:border-zinc-800 shrink-0">
@@ -314,9 +301,15 @@ export default function BoardPage() {
                                     className="inline-flex items-center gap-2 text-[#3A9B9B] font-bold text-lg hover:text-[#2a7676] transition-colors group">
                                     {tBoard('viewPortfolio')} <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                                 </Link>
-                            </motion.div>
+                            </div>
 
                         </div>
+
+                        {/* ── CMS-managed Directors (dynamic) ── */}
+                        {cmsDirectors.length > 0 && (
+                            <BoardPageClient directors={cmsDirectors} viewPortfolioLabel={tBoard('viewPortfolio')} />
+                        )}
+
                     </div>
                 </section>
 
