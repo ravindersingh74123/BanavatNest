@@ -31,7 +31,7 @@ export async function POST(req: NextRequest, { params }: Params) {
 
     return NextResponse.json({
       success: true,
-      redirectTo: '/cms/editor',
+      redirectTo: `/cms/editor/${user.username}`,
       user: {
         id: user._id.toString(),
         username: user.username,

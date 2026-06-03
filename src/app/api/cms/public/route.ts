@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/mongodb';
 
-/* ── GET /api/cms/public — list all published directors (for board page) ── */
+/* ── GET /api/cms/public — list all published directors grouped by tag ── */
 export async function GET() {
   try {
     const db = await getDb();
@@ -9,7 +9,6 @@ export async function GET() {
     const publishedProfiles = await db
       .collection('director_profiles')
       .find({ status: 'published' })
-      .sort({ publishedAt: 1 })
       .toArray();
 
     const userIds = publishedProfiles.map((p) => p.userId);
@@ -30,11 +29,23 @@ export async function GET() {
         role: data?.role ?? '',
         image: data?.image ?? user?.profileImage ?? null,
         bio: typeof data?.bio === 'string' ? data.bio.slice(0, 300) : '',
+        tag: user?.tag ?? 'Board of Director',
+        priorityValue: user?.priorityValue ?? 0,
         publishedAt: profile.publishedAt,
+        boardPreview: data?.boardPreview ?? null,
       };
     });
 
-    return NextResponse.json({ directors });
+    // Group by tag and sort by priorityValue ascending
+    const boardDirectors = directors
+      .filter((d) => d.tag === 'Board of Director')
+      .sort((a, b) => (a.priorityValue ?? 0) - (b.priorityValue ?? 0));
+
+    const associateDirectors = directors
+      .filter((d) => d.tag === 'Associate Director')
+      .sort((a, b) => (a.priorityValue ?? 0) - (b.priorityValue ?? 0));
+
+    return NextResponse.json({ directors, boardDirectors, associateDirectors });
   } catch (err) {
     console.error('[public directors list]', err);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

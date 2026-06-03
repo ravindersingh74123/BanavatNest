@@ -97,12 +97,24 @@ export type AcademicProfile =
   | { name: string; link: string }
   | { platform: string; url: string };
 
+export interface BoardPreview {
+  /** Short bio shown on the /about/board card */
+  shortBio: string;
+  /** Coloured role label e.g. "CO-FOUNDER & DIRECTOR (RESEARCH & STRATEGY)" */
+  boardRole: string;
+  /** Achievement bullets (3 recommended) */
+  achievements: string[];
+}
+
 export interface PortfolioData {
   id: string;
   name: string;
   role: string;
   image: string | null;
   bio: string;
+
+  /** Optional: data shown on the public /about/board card */
+  boardPreview?: BoardPreview;
 
   job: {
     summary: string;
@@ -138,6 +150,11 @@ export function emptyPortfolio(id = '', name = ''): PortfolioData {
     role: '',
     image: null,
     bio: '',
+    boardPreview: {
+      shortBio: '',
+      boardRole: '',
+      achievements: ['', '', ''],
+    },
     job: {
       summary: '',
       positions: [],

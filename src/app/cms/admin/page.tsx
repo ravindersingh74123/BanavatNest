@@ -15,6 +15,8 @@ interface Director {
   username: string;
   email: string;
   role: string;
+  tag: string;
+  priorityValue: number;
   profileImage: string | null;
   portfolioStatus: 'draft' | 'published';
   publishedAt: string | null;
@@ -52,8 +54,9 @@ function AddDirectorModal({
 }) {
   const [fullName, setFullName] = useState('');
   const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [tag, setTag] = useState<'Board of Director' | 'Associate Director'>('Board of Director');
+  const [priorityValue, setPriorityValue] = useState(0);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [imageBase64, setImageBase64] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -97,8 +100,9 @@ function AddDirectorModal({
         body: JSON.stringify({
           fullName,
           username,
-          email,
           password,
+          tag,
+          priorityValue,
           profileImage: imageBase64,
         }),
       });
@@ -205,21 +209,6 @@ function AddDirectorModal({
               </div>
             </div>
 
-            {/* Email */}
-            <div>
-              <label className="block text-sm font-bold text-zinc-700 dark:text-zinc-300 mb-1.5">
-                Email Address *
-              </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                placeholder="jane@institution.ac.in"
-                className="w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:border-[#3A9B9B] transition-colors"
-              />
-            </div>
-
             {/* Password */}
             <div>
               <label className="block text-sm font-bold text-zinc-700 dark:text-zinc-300 mb-1.5">
@@ -232,6 +221,36 @@ function AddDirectorModal({
                 required
                 minLength={6}
                 placeholder="Min. 6 characters"
+                className="w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:border-[#3A9B9B] transition-colors"
+              />
+            </div>
+
+            {/* Tag */}
+            <div>
+              <label className="block text-sm font-bold text-zinc-700 dark:text-zinc-300 mb-1.5">
+                Tag
+              </label>
+              <select
+                value={tag}
+                onChange={(e) => setTag(e.target.value as 'Board of Director' | 'Associate Director')}
+                className="w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:border-[#3A9B9B] transition-colors"
+              >
+                <option value="Board of Director">Board of Director</option>
+                <option value="Associate Director">Associate Director</option>
+              </select>
+            </div>
+
+            {/* Priority Value */}
+            <div>
+              <label className="block text-sm font-bold text-zinc-700 dark:text-zinc-300 mb-1.5">
+                Priority Value <span className="text-zinc-400 font-normal">(lower = appears first)</span>
+              </label>
+              <input
+                type="number"
+                value={priorityValue}
+                onChange={(e) => setPriorityValue(Number(e.target.value))}
+                min={0}
+                placeholder="0"
                 className="w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:border-[#3A9B9B] transition-colors"
               />
             </div>
@@ -390,10 +409,10 @@ export default function AdminPage() {
     fetchDirectors();
   }
 
-  async function handleLoginAs(id: string) {
+  async function handleLoginAs(username: string, id: string) {
     const res = await fetch(`/api/cms/directors/${id}/login-as`, { method: 'POST' });
     const data = await res.json();
-    if (res.ok) router.push(data.redirectTo);
+    if (res.ok) router.push(`/cms/editor/${username}`);
   }
 
   async function handleLogout() {
@@ -511,7 +530,7 @@ export default function AdminPage() {
             <table className="w-full">
               <thead>
                 <tr className="bg-zinc-50/80 dark:bg-zinc-950/50 text-left">
-                  {['Director', 'Username', 'Email', 'Status', 'Last Updated', 'Actions'].map((h) => (
+                  {['Director', 'Username', 'Tag', 'Status', 'Last Updated', 'Actions'].map((h) => (
                     <th key={h} className="px-6 py-4 text-xs font-black text-zinc-500 dark:text-zinc-400 uppercase tracking-widest">
                       {h}
                     </th>
@@ -570,7 +589,13 @@ export default function AdminPage() {
                       </td>
 
                       <td className="px-6 py-4">
-                        <span className="text-sm font-medium text-zinc-600 dark:text-zinc-400">{director.email}</span>
+                        <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold border ${
+                          director.tag === 'Board of Director'
+                            ? 'bg-[#2D3561]/10 text-[#2D3561] dark:text-zinc-300 border-[#2D3561]/20'
+                            : 'bg-[#3A9B9B]/10 text-[#3A9B9B] border-[#3A9B9B]/20'
+                        }`}>
+                          {director.tag ?? 'Board of Director'}
+                        </span>
                       </td>
 
                       <td className="px-6 py-4">
@@ -599,7 +624,7 @@ export default function AdminPage() {
 
                           {/* Login as */}
                           <button
-                            onClick={() => handleLoginAs(director.id)}
+                            onClick={() => handleLoginAs(director.username, director.id)}
                             title="Login as this director"
                             className="w-8 h-8 rounded-xl flex items-center justify-center text-zinc-400 hover:text-[#2D3561] dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
                           >

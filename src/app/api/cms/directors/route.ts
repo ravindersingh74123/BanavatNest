@@ -3,7 +3,6 @@ import { getDb } from '@/lib/mongodb';
 import { requireAuth, hashPassword } from '@/lib/auth';
 import { uploadImage } from '@/lib/cloudinary';
 import { emptyPortfolio } from '@/lib/portfolio-types';
-import { ObjectId } from 'mongodb';
 
 /* ── GET /api/cms/directors — list all directors (super_admin only) ── */
 export async function GET(req: NextRequest) {
@@ -27,8 +26,10 @@ export async function GET(req: NextRequest) {
         id: u._id.toString(),
         fullName: u.fullName,
         username: u.username,
-        email: u.email,
+        email: u.email ?? '',
         role: u.role,
+        tag: u.tag ?? 'Board of Director',
+        priorityValue: u.priorityValue ?? 0,
         profileImage: u.profileImage ?? null,
         portfolioStatus: profile?.status ?? 'draft',
         publishedAt: profile?.publishedAt ?? null,
@@ -52,20 +53,30 @@ export async function POST(req: NextRequest) {
     void session;
 
     const body = await req.json();
-    const { fullName, username, email, password, profileImage } = body;
+    const {
+      fullName,
+      username,
+      password,
+      profileImage,
+      tag = 'Board of Director',
+      priorityValue = 0,
+    } = body;
 
-    if (!fullName || !username || !email || !password) {
-      return NextResponse.json({ error: 'fullName, username, email, password are required' }, { status: 400 });
+    if (!fullName || !username || !password) {
+      return NextResponse.json(
+        { error: 'fullName, username, and password are required' },
+        { status: 400 }
+      );
     }
 
     const db = await getDb();
 
-    // Check uniqueness
+    // Check username uniqueness only
     const existing = await db.collection('users').findOne({
-      $or: [{ email: email.toLowerCase() }, { username: username.toLowerCase() }],
+      username: username.toLowerCase(),
     });
     if (existing) {
-      return NextResponse.json({ error: 'Email or username already taken' }, { status: 409 });
+      return NextResponse.json({ error: 'Username already taken' }, { status: 409 });
     }
 
     // Upload profile image to Cloudinary if provided
@@ -80,9 +91,10 @@ export async function POST(req: NextRequest) {
     const userResult = await db.collection('users').insertOne({
       fullName,
       username: username.toLowerCase(),
-      email: email.toLowerCase(),
       passwordHash,
       role: 'director',
+      tag,
+      priorityValue: Number(priorityValue) || 0,
       profileImage: imageUrl,
       createdAt: now,
       updatedAt: now,
@@ -90,7 +102,6 @@ export async function POST(req: NextRequest) {
 
     const userId = userResult.insertedId;
     const portfolio = emptyPortfolio(userId.toString(), fullName);
-    portfolio.contact.email = email.toLowerCase();
     if (imageUrl) portfolio.image = imageUrl;
 
     await db.collection('director_profiles').insertOne({
@@ -110,8 +121,9 @@ export async function POST(req: NextRequest) {
           id: userId.toString(),
           fullName,
           username: username.toLowerCase(),
-          email: email.toLowerCase(),
           role: 'director',
+          tag,
+          priorityValue: Number(priorityValue) || 0,
           profileImage: imageUrl,
         },
       },

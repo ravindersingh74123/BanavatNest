@@ -1,6 +1,5 @@
-import { ArrowRight, Beaker, Cpu, Trophy, Network, GraduationCap, Star, CircleDot } from 'lucide-react';
+import { ArrowRight, Beaker, Cpu, Trophy, Network, GraduationCap, Star } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
-import { Link } from '@/i18n/navigation';
 import PageWrapper from '@/components/PageWrapper';
 import BoardPageClient from './BoardPageClient';
 
@@ -25,24 +24,35 @@ function ArrowUpRightIcon({ className = '' }) {
     );
 }
 
+interface CMSDirector {
+    id: string;
+    username: string;
+    fullName: string;
+    role: string;
+    image: string | null;
+    bio: string;
+    tag?: string;
+    priorityValue?: number;
+}
+
 export default async function BoardPage() {
     const t = await getTranslations('aboutBoard');
     const tBoard = await getTranslations('boardPage');
 
-    // Fetch CMS-managed published directors
-    let cmsDirectors: Array<{
-        id: string; username: string; fullName: string;
-        role: string; image: string | null; bio: string;
-    }> = [];
+    // Fetch CMS-managed published directors grouped by tag
+    let boardDirectors: CMSDirector[] = [];
+    let associateDirectors: CMSDirector[] = [];
+
     try {
         const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-        const res = await fetch(`${baseUrl}/api/cms/public`, { next: { revalidate: 60 } });
+        const res = await fetch(`${baseUrl}/api/cms/public`, { cache: 'no-store' });
         if (res.ok) {
             const data = await res.json();
-            cmsDirectors = data.directors || [];
+            boardDirectors = data.boardDirectors ?? [];
+            associateDirectors = data.associateDirectors ?? [];
         }
     } catch {
-        // Silently fail — board page still works with static founders
+        // Silently fail — page still renders if API is unavailable
     }
 
     return (
@@ -112,22 +122,6 @@ export default async function BoardPage() {
                                                         </p>
                                                     </div>
                                                 </div>
-
-                                                {/* Item 3 */}
-                                                {/* <div className="flex items-center gap-3">
-                                                    <div className="h-12 w-12 rounded-xl bg-[#E8F7F7] flex items-center justify-center shrink-0">
-                                                        <Zap className="w-6 h-6 text-[#148787]" />
-                                                    </div>
-
-                                                    <div>
-                                                        <h4 className="text-lg font-black text-[#111827]">
-                                                            {tBoard('stat3Val')}
-                                                        </h4>
-                                                        <p className="text-xs text-zinc-600 font-medium">
-                                                            {tBoard('stat3Label')}
-                                                        </p>
-                                                    </div>
-                                                </div> */}
                                             </div>
                                         </div>
                                         <div className="w-full h-[3px] rounded-full bg-gradient-to-r from-[#2D3561] to-[#3A9B9B] mb-6" />
@@ -250,64 +244,31 @@ export default async function BoardPage() {
                             </h2>
                         </div>
 
-                        {/* Director cards */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                        {/* ── Board of Directors (from DB, sorted by priorityValue) ── */}
+                        {boardDirectors.length > 0 && (
+                            <>
+                                <BoardPageClient
+                                    directors={boardDirectors}
+                                    viewPortfolioLabel={tBoard('viewPortfolio')}
+                                    sectionLabel="Board of Director"
+                                />
+                            </>
+                        )}
 
-                            {/* Dr. Sukhdev Singh */}
-                            <div className="bg-white dark:bg-zinc-900/50 rounded-[4rem] p-10 md:p-12 border border-zinc-100 dark:border-zinc-800 relative text-left transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-2 dark:hover:shadow-[0_0_40px_rgba(58,155,155,0.15)] dark:hover:border-teal-500/30"
-                            >
-                                <div className="flex flex-col md:flex-row items-center md:items-center gap-8 mb-10 text-center md:text-left">
-                                    <div className="w-40 h-40 md:w-48 md:h-48 rounded-3xl overflow-hidden shadow-lg border-4 border-white dark:border-zinc-800 shrink-0">
-                                        <img src="/images/Director/Sukhdev.jpeg" alt={t('sukhdevName')} className="w-full h-full object-cover object-top" />
-                                    </div>
-                                    <div className="flex-grow">
-                                        <h3 className="text-xl md:text-2xl font-black text-zinc-900 dark:text-zinc-100 mb-1 whitespace-nowrap">{t('sukhdevName')}</h3>
-                                        <p className="text-zinc-500 dark:text-zinc-400 font-semibold text-sm mb-1 tracking-wide">{t('sukhdevEdu')}</p>
-                                        <p className="text-[#3A9B9B] font-bold text-sm uppercase tracking-widest leading-tight">{t('sukhdevRole')}</p>
-                                    </div>
+                        {/* ── Associate Directors ── */}
+                        {associateDirectors.length > 0 && (
+                            <>
+                                <div className="text-center mt-20 mb-14">
+                                    <h2 className="text-3xl md:text-4xl font-bold text-zinc-900 dark:text-zinc-100 mb-4">
+                                        Associate <span className="text-[#3A9B9B]">Directors</span>
+                                    </h2>
                                 </div>
-                                <p className="text-zinc-600 dark:text-zinc-400 text-lg leading-relaxed text-justify mb-6 font-medium">{t('sukhdevBio')}</p>
-                                <ul className="space-y-3 text-zinc-500 dark:text-zinc-500 font-bold text-sm mb-8">
-                                    <li className="flex items-center"><CircleDot className="w-4 h-4 mr-3 text-[#3A9B9B]" /> {t('sukhdevAch1')}</li>
-                                    <li className="flex items-center"><CircleDot className="w-4 h-4 mr-3 text-[#3A9B9B]" /> {t('sukhdevAch2')}</li>
-                                    <li className="flex items-center"><CircleDot className="w-4 h-4 mr-3 text-[#3A9B9B]" /> {t('sukhdevAch3')}</li>
-                                </ul>
-                                <Link href="/about/board/dr-sukhdev-singh"
-                                    className="inline-flex items-center gap-2 text-[#3A9B9B] font-bold text-lg hover:text-[#2a7676] transition-colors group">
-                                    {tBoard('viewPortfolio')} <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                                </Link>
-                            </div>
-
-                            {/* Dr. Sangita Roy */}
-                            <div className="bg-white dark:bg-zinc-900/50 rounded-[4rem] p-10 md:p-12 border border-zinc-100 dark:border-zinc-800 relative text-left transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-2 dark:hover:shadow-[0_0_40px_rgba(58,155,155,0.15)] dark:hover:border-teal-500/30 overflow-hidden"
-                            >
-                                <div className="flex flex-col md:flex-row items-center md:items-center gap-8 mb-10 text-center md:text-left">
-                                    <div className="w-40 h-40 md:w-48 md:h-48 rounded-3xl overflow-hidden shadow-lg border-4 border-white dark:border-zinc-800 shrink-0">
-                                        <img src="/images/Director/Sangita.jpeg" alt={t('sangitaName')} className="w-full h-full object-cover object-top" />
-                                    </div>
-                                    <div className="flex-grow">
-                                        <h3 className="text-xl md:text-2xl font-black text-zinc-900 dark:text-zinc-100 mb-1 whitespace-nowrap">{t('sangitaName')}</h3>
-                                        <p className="text-zinc-500 dark:text-zinc-400 font-semibold text-sm mb-1 tracking-wide">{t('sangitaEdu')}</p>
-                                        <p className="text-[#3A9B9B] font-bold text-sm uppercase tracking-widest leading-tight">{t('sangitaRole')}</p>
-                                    </div>
-                                </div>
-                                <p className="text-zinc-600 dark:text-zinc-400 text-lg leading-relaxed mb-6 text-justify  font-medium">{t('sangitaBio')}</p>
-                                <ul className="space-y-3 text-zinc-500 dark:text-zinc-500 font-bold text-sm mb-8">
-                                    <li className="flex items-center"><CircleDot className="w-4 h-4 mr-3 text-[#3A9B9B]" /> {t('sangitaAch1')}</li>
-                                    <li className="flex items-center"><CircleDot className="w-4 h-4 mr-3 text-[#3A9B9B]" /> {t('sangitaAch2')}</li>
-                                    <li className="flex items-center"><CircleDot className="w-4 h-4 mr-3 text-[#3A9B9B]" /> {t('sangitaAch3')}</li>
-                                </ul>
-                                <Link href="/about/board/dr-sangita-roy"
-                                    className="inline-flex items-center gap-2 text-[#3A9B9B] font-bold text-lg hover:text-[#2a7676] transition-colors group">
-                                    {tBoard('viewPortfolio')} <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                                </Link>
-                            </div>
-
-                        </div>
-
-                        {/* ── CMS-managed Directors (dynamic) ── */}
-                        {cmsDirectors.length > 0 && (
-                            <BoardPageClient directors={cmsDirectors} viewPortfolioLabel={tBoard('viewPortfolio')} />
+                                <BoardPageClient
+                                    directors={associateDirectors}
+                                    viewPortfolioLabel={tBoard('viewPortfolio')}
+                                    sectionLabel="Associate Director"
+                                />
+                            </>
                         )}
 
                     </div>
