@@ -2,17 +2,25 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import PortfolioPage from '@/components/PortfolioPage';
 import type { PortfolioData } from '@/lib/portfolio-types';
+import { getDb } from '@/lib/mongodb';
 
 type Props = { params: Promise<{ locale: string; username: string }> };
 
 async function getDirectorData(username: string): Promise<PortfolioData | null> {
     try {
-        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-        const res = await fetch(`${baseUrl}/api/cms/public/${username}`, { cache: 'no-store' });
-        if (!res.ok) return null;
-        const data = await res.json();
-        return data.portfolioData ?? null;
-    } catch {
+        const db = await getDb();
+        const user = await db.collection('users').findOne(
+            { username: username.toLowerCase() },
+            { projection: { passwordHash: 0 } }
+        );
+        if (!user) return null;
+
+        const profile = await db.collection('director_profiles').findOne({ userId: user._id });
+        if (!profile || profile.status !== 'published') return null;
+
+        return profile.portfolioData as PortfolioData;
+    } catch (err) {
+        console.error('Error fetching director data:', err);
         return null;
     }
 }
