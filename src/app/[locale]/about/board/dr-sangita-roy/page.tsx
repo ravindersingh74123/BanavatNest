@@ -7,6 +7,15 @@ const SANGITA_DATA: PortfolioData = {
     name: "Dr. Sangita Roy",
     role: "Ph.D. (IIT Patna)",
     image: "/images/Director/Sangita.jpeg",
+    boardPreview: {
+        boardRole: 'CO-FOUNDER & DIRECTOR (INNOVATION & TECHNOLOGY)',
+        shortBio: 'Accomplished academic with expertise in Computer Science, specialized in Cybersecurity, BlockChain, and IoT. Experienced in industry-oriented and funded research.',
+        achievements: [
+            'PhD from IIT Patna, Postdoc from Tel Aviv University (Israel)',
+            'Former Senior Scientist at IIT Bombay',
+            'Leadership in technology innovation',
+        ],
+    },
     bio: `
 Dr. Sangita Roy is currently working as an Assistant Professor in the Department of Computer Science and Engineering (CSE) at Thapar Institute of Engineering and Technology, Patiala, Punjab. She did her Ph.D. from the Indian Institute of Technology Patna. During her Ph.D., she got an opportunity of having an internship at TCS Innovation Lab, Fellowship from TCS and Project funding from DST India. Dr. Roy has also worked as a Post Doctoral Research fellow under the supervision of Prof. Yuval Shavitt in the Department of Electrical Engineering at Tel Aviv University, Israel
 

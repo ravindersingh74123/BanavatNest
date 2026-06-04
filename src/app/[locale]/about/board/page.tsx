@@ -235,31 +235,11 @@ export default async function BoardPage() {
                 <section className="pt-16 pb-8 px-4 sm:px-6 lg:px-8 grid-bg">
                     <div className="max-w-7xl mx-auto">
 
-                        {/* Section heading */}
-                        <div className="text-center mb-14">
-                            <h2
-                                className="text-3xl md:text-5xl lg:text-6xl font-bold text-zinc-900 dark:text-zinc-100 mb-4"
-                            >
-                                {tBoard('boardTitle')} <span className="text-[#3A9B9B]">{tBoard('boardHighlight')}</span>
-                            </h2>
-                        </div>
-
-                        {/* ── Board of Directors (from DB, sorted by priorityValue) ── */}
-                        {boardDirectors.length > 0 && (
-                            <>
-                                <BoardPageClient
-                                    directors={boardDirectors}
-                                    viewPortfolioLabel={tBoard('viewPortfolio')}
-                                    sectionLabel="Board of Director"
-                                />
-                            </>
-                        )}
-
                         {/* ── Associate Directors ── */}
                         {associateDirectors.length > 0 && (
                             <>
-                                <div className="text-center mt-20 mb-14">
-                                    <h2 className="text-3xl md:text-4xl font-bold text-zinc-900 dark:text-zinc-100 mb-4">
+                                <div className="text-center mb-14">
+                                    <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold text-zinc-900 dark:text-zinc-100 mb-4">
                                         Associate <span className="text-[#3A9B9B]">Directors</span>
                                     </h2>
                                 </div>
@@ -267,6 +247,24 @@ export default async function BoardPage() {
                                     directors={associateDirectors}
                                     viewPortfolioLabel={tBoard('viewPortfolio')}
                                     sectionLabel="Associate Director"
+                                />
+                            </>
+                        )}
+
+                        {/* ── Board of Directors (from DB, sorted by priorityValue) ── */}
+                        {boardDirectors.length > 0 && (
+                            <>
+                                <div className="text-center ">
+                                    <h2
+                                        className="text-3xl md:text-5xl lg:text-6xl font-bold text-zinc-900 dark:text-zinc-100 mb-4"
+                                    >
+                                        {tBoard('boardTitle')} <span className="text-[#3A9B9B]">{tBoard('boardHighlight')}</span>
+                                    </h2>
+                                </div>
+                                <BoardPageClient
+                                    directors={boardDirectors}
+                                    viewPortfolioLabel={tBoard('viewPortfolio')}
+                                    sectionLabel="Board of Director"
                                 />
                             </>
                         )}
