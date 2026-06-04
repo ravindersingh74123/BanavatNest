@@ -2,6 +2,7 @@ import { ArrowRight, Beaker, Cpu, Trophy, Network, GraduationCap, Star } from 'l
 import { getTranslations } from 'next-intl/server';
 import PageWrapper from '@/components/PageWrapper';
 import BoardPageClient from './BoardPageClient';
+import { getDb } from '@/lib/mongodb';
 
 function SparklesIcon({ className = '' }) {
     return (
@@ -33,6 +34,7 @@ interface CMSDirector {
     bio: string;
     tag?: string;
     priorityValue?: number;
+    boardPreview?: any;
 }
 
 export default async function BoardPage() {
@@ -44,15 +46,45 @@ export default async function BoardPage() {
     let associateDirectors: CMSDirector[] = [];
 
     try {
-        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-        const res = await fetch(`${baseUrl}/api/cms/public`, { cache: 'no-store' });
-        if (res.ok) {
-            const data = await res.json();
-            boardDirectors = data.boardDirectors ?? [];
-            associateDirectors = data.associateDirectors ?? [];
-        }
-    } catch {
-        // Silently fail — page still renders if API is unavailable
+        const db = await getDb();
+        const publishedProfiles = await db
+            .collection('director_profiles')
+            .find({ status: 'published' })
+            .toArray();
+
+        const userIds = publishedProfiles.map((p) => p.userId);
+        const users = await db
+            .collection('users')
+            .find({ _id: { $in: userIds } }, { projection: { passwordHash: 0 } })
+            .toArray();
+
+        const userMap = new Map(users.map((u) => [u._id.toString(), u]));
+
+        const directors = publishedProfiles.map((profile) => {
+            const user = userMap.get(profile.userId.toString());
+            const data = profile.portfolioData;
+            return {
+                id: user?._id.toString() ?? '',
+                username: user?.username ?? '',
+                fullName: user?.fullName ?? data?.name ?? '',
+                role: data?.role ?? '',
+                image: data?.image ?? user?.profileImage ?? null,
+                bio: typeof data?.bio === 'string' ? data.bio.slice(0, 300) : '',
+                tag: user?.tag ?? 'Board of Director',
+                priorityValue: user?.priorityValue ?? 0,
+                boardPreview: data?.boardPreview ?? null,
+            };
+        });
+
+        boardDirectors = directors
+            .filter((d) => d.tag === 'Board of Director')
+            .sort((a, b) => (a.priorityValue ?? 0) - (b.priorityValue ?? 0));
+
+        associateDirectors = directors
+            .filter((d) => d.tag === 'Associate Director')
+            .sort((a, b) => (a.priorityValue ?? 0) - (b.priorityValue ?? 0));
+    } catch (err) {
+        console.error('Error fetching directors:', err);
     }
 
     return (
