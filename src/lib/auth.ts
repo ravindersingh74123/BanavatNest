@@ -25,9 +25,11 @@ function base64url(data: Uint8Array): string {
   return Buffer.from(data).toString('base64url');
 }
 
-function base64urlDecode(str: string): Uint8Array {
+function base64urlDecode(str: string): Uint8Array<ArrayBuffer> {
   const buf = Buffer.from(str, 'base64url');
-  return new Uint8Array(buf.buffer as ArrayBuffer, buf.byteOffset, buf.byteLength);
+  // Slice into a fresh ArrayBuffer so the result satisfies BufferSource (Web Crypto API)
+  const ab = buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength) as ArrayBuffer;
+  return new Uint8Array(ab);
 }
 
 async function getKey(secret: string): Promise<CryptoKey> {
