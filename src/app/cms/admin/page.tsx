@@ -55,7 +55,7 @@ function AddDirectorModal({
   const [fullName, setFullName] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [tag, setTag] = useState<'Board of Director' | 'Associate Director'>('Board of Director');
+  const [tag, setTag] = useState<'Board of Director' | 'Advisory board'>('Board of Director');
   const [priorityValue, setPriorityValue] = useState(0);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [imageBase64, setImageBase64] = useState<string | null>(null);
@@ -232,11 +232,11 @@ function AddDirectorModal({
               </label>
               <select
                 value={tag}
-                onChange={(e) => setTag(e.target.value as 'Board of Director' | 'Associate Director')}
+                onChange={(e) => setTag(e.target.value as 'Board of Director' | 'Advisory board')}
                 className="w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:border-[#3A9B9B] transition-colors"
               >
                 <option value="Board of Director">Board of Director</option>
-                <option value="Associate Director">Associate Director</option>
+                <option value="Advisory board">Advisory board</option>
               </select>
             </div>
 

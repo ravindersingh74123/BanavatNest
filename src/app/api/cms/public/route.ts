@@ -42,7 +42,7 @@ export async function GET() {
       .sort((a, b) => (a.priorityValue ?? 0) - (b.priorityValue ?? 0));
 
     const associateDirectors = directors
-      .filter((d) => d.tag === 'Associate Director')
+      .filter((d) => d.tag === 'Advisory board')
       .sort((a, b) => (a.priorityValue ?? 0) - (b.priorityValue ?? 0));
 
     return NextResponse.json({ directors, boardDirectors, associateDirectors });

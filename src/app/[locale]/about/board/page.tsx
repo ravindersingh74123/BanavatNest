@@ -81,7 +81,7 @@ export default async function BoardPage() {
             .sort((a, b) => (a.priorityValue ?? 0) - (b.priorityValue ?? 0));
 
         associateDirectors = directors
-            .filter((d) => d.tag === 'Associate Director')
+            .filter((d) => d.tag === 'Advisory board')
             .sort((a, b) => (a.priorityValue ?? 0) - (b.priorityValue ?? 0));
     } catch (err) {
         console.error('Error fetching directors:', err);
@@ -267,7 +267,7 @@ export default async function BoardPage() {
                 <section className="pt-16 pb-8 px-4 sm:px-6 lg:px-8 grid-bg">
                     <div className="max-w-7xl mx-auto">
 
-                        {/* ── Associate Directors ── */}
+                        {/* ── Advisory board ── */}
                         {associateDirectors.length > 0 && (
                             <>
                                 <div className="text-center mb-14">
@@ -278,7 +278,7 @@ export default async function BoardPage() {
                                 <BoardPageClient
                                     directors={associateDirectors}
                                     viewPortfolioLabel={tBoard('viewPortfolio')}
-                                    sectionLabel="Associate Director"
+                                    sectionLabel="Advisory board"
                                 />
                             </>
                         )}
