@@ -91,7 +91,7 @@ export default function ProfileSection({ data, onChange }: Props) {
       {/* Role */}
       <div>
         <label className="block text-sm font-bold text-zinc-700 dark:text-zinc-300 mb-2">
-          Role / Title *
+          Role / Title
         </label>
         <input
           type="text"

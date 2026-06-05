@@ -272,7 +272,7 @@ export default async function BoardPage() {
                             <>
                                 <div className="text-center mb-14">
                                     <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold text-zinc-900 dark:text-zinc-100 mb-4">
-                                        Associate <span className="text-[#3A9B9B]">Directors</span>
+                                        Advisory <span className="text-[#3A9B9B]">Board</span>
                                     </h2>
                                 </div>
                                 <BoardPageClient

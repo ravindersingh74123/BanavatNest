@@ -9,7 +9,6 @@ type Params = { params: Promise<{ id: string }> };
 function validatePortfolio(data: PortfolioData): string[] {
   const errors: string[] = [];
   if (!data.name?.trim()) errors.push('Name is required');
-  if (!data.role?.trim()) errors.push('Role is required');
   if (!data.bio?.trim()) errors.push('Biography is required');
   if (!data.contact?.email?.trim()) errors.push('Contact email is required');
   return errors;
