@@ -241,6 +241,30 @@ export default function GstCalculator() {
     lastEdited,
   ]);
 
+  const roundedGstPayable = parseFloat(profitResult.gstPayable.toFixed(2));
+  const isGstPayableNegative = roundedGstPayable < 0;
+  const isGstPayablePositive = roundedGstPayable > 0;
+  const isGstPayableNeutral = roundedGstPayable === 0;
+
+  // Conditional styles for GST Payable card
+  let gstPayableCardClasses = "border-[#3A9B9B]/20 bg-gradient-to-br from-[#3A9B9B]/5 via-white/60 to-[#2D3561]/5 dark:from-[#3A9B9B]/10 dark:via-zinc-900/60 dark:to-[#2D3561]/10";
+  let gstPayableTextClasses = "text-[#3A9B9B]";
+  let gstPayableTitleClasses = "text-[#3A9B9B]";
+  let gstPayableShadowClasses = "hover:shadow-md";
+
+  if (isGstPayableNegative) {
+    // Green (success) state: high-contrast text, bold/emphasized
+    gstPayableCardClasses = "border-transparent bg-gradient-to-r from-[#047857] to-[#065f46] dark:from-[#065f46] dark:to-[#022c22]";
+    gstPayableTextClasses = "text-white";
+    gstPayableTitleClasses = "text-white/90";
+    gstPayableShadowClasses = "shadow-lg shadow-[#047857]/20 dark:shadow-[#065f46]/20 hover:shadow-xl";
+  } else if (isGstPayablePositive) {
+    // Red (alert) state: high-contrast text, bold/emphasized
+    gstPayableCardClasses = "border-transparent bg-gradient-to-r from-[#E11D48] to-[#BE123C] dark:from-[#BE123C] dark:to-[#9F1239]";
+    gstPayableTextClasses = "text-white";
+    gstPayableTitleClasses = "text-white/90";
+    gstPayableShadowClasses = "shadow-lg shadow-[#E11D48]/20 dark:shadow-[#BE123C]/20 hover:shadow-xl";
+  }
 
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-[#09090b] text-zinc-900 dark:text-zinc-100 font-sans pt-2 grid-bg">
@@ -729,16 +753,16 @@ export default function GstCalculator() {
                     </div>
 
                     {/* GST Payable */}
-                    <div className="relative overflow-hidden rounded-xl border-2 border-[#3A9B9B]/20 bg-gradient-to-br from-[#3A9B9B]/5 via-white/60 to-[#2D3561]/5 dark:from-[#3A9B9B]/10 dark:via-zinc-900/60 dark:to-[#2D3561]/10 backdrop-blur-sm p-2 sm:p-3 text-center hover:shadow-md transition-all duration-300 min-h-[90px] flex flex-col justify-center items-center h-full w-full">
-                      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#2D3561] via-[#3A9B9B] to-[#2D3561]" />
+                    <div className={`relative overflow-hidden rounded-xl border-2 transition-all duration-300 min-h-[90px] flex flex-col justify-center items-center h-full w-full ${gstPayableCardClasses} ${gstPayableShadowClasses}`}>
+                      <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#2D3561] via-[#3A9B9B] to-[#2D3561] transition-opacity duration-300 ${isGstPayableNeutral ? "opacity-100" : "opacity-0"}`} />
                       <div className="flex flex-col justify-center items-center h-full">
                         <div className="h-[28px] sm:h-[32px] flex items-center justify-center text-center max-w-[100px]">
-                          <p className="text-[8px] sm:text-[10px] text-[#3A9B9B] font-black uppercase tracking-widest leading-tight">
+                          <p className={`text-[8px] sm:text-[10px] font-black uppercase tracking-widest leading-tight transition-colors duration-300 ${gstPayableTitleClasses}`}>
                             GST Payable
                           </p>
                         </div>
                         <div className="mt-1 min-h-[24px] flex items-center justify-center">
-                          <p className="text-sm sm:text-xl font-black tracking-tight text-[#3A9B9B] whitespace-nowrap">
+                          <p className={`text-sm sm:text-xl font-black tracking-tight whitespace-nowrap transition-colors duration-300 ${gstPayableTextClasses}`}>
                             ₹{profitResult.gstPayable.toFixed(2)}
                           </p>
                         </div>
